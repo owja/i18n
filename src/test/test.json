@@ -1,40 +1,36 @@
 {
   "en": {
-    "global": {
-      "item": "1 item",
-      "item_plural": "{{count}} items",
-      "item_0": "Zero items",
-      "hello": "Hello {{what}}",
-      "ownerCar_male": "his car",
-      "ownerCar_female": "her car",
-      "ownerCar_male_plural": "his cars",
-      "ownerCar_female_plural": "her cars",
-      "sub": {
-        "something": "something",
-        "else": "else"
-      },
-      "exist": "this only in english language"
+    "item": "1 item",
+    "item_plural": "{{count}} items",
+    "item_0": "Zero items",
+    "hello": "Hello {{what}}",
+    "ownerCar_male": "his car",
+    "ownerCar_female": "her car",
+    "ownerCar_male_plural": "his cars",
+    "ownerCar_female_plural": "her cars",
+    "sub": {
+      "something": "something",
+      "else": "else"
     },
+    "exist": "this only in english language",
     "main": {
       "hello": "Bye bye World"
     },
     "space": {
-      "exit": "space ns only exist in english"
+      "exit": "space only exist in english"
     }
   },
   "de": {
-    "global": {
-      "item": "Ein Dings",
-      "item_plural": "{{count}} Dingens",
-      "hello": "Hallo {{what}}",
-      "ownerCar": "Auto",
-      "ownerCar_plural": "Autos",
-      "ownerCar_male": "Sein Auto",
-      "ownerCar_female": "Ihr Auto",
-      "sub": {
-        "something": "etwas",
-        "else": "anderes"
-      }
+    "item": "Ein Dings",
+    "item_plural": "{{count}} Dingens",
+    "hello": "Hallo {{what}}",
+    "ownerCar": "Auto",
+    "ownerCar_plural": "Autos",
+    "ownerCar_male": "Sein Auto",
+    "ownerCar_female": "Ihr Auto",
+    "sub": {
+      "something": "etwas",
+      "else": "anderes"
     },
     "main": {
       "hello": "Und tschüss Welt"

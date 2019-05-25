@@ -4,8 +4,8 @@
   "description": "lightweight internationalization library for javascript",
   "main": "dist/i18n.js",
   "module": "dist/i18n.mjs",
-  "source": "src/index.ts",
-  "types": "dist/index.d.ts",
+  "source": "src/translator.ts",
+  "types": "dist/translator.d.ts",
   "keywords": [
     "typescript",
     "internationalization",

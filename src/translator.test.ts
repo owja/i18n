@@ -1,5 +1,5 @@
 import {Translator} from "./translator";
-import testResource from "../test/test.json";
+import testResource from "./test/test.json";
 
 describe("Translator", () => {
     let instance: Translator;
@@ -8,36 +8,28 @@ describe("Translator", () => {
     });
 
     test("will have default options", () => {
-        expect((instance as any)._options.languageFallback).toBe("en");
-        expect((instance as any)._options.namespaceFallback).toBe("global");
-        expect((instance as any)._options.defaultLanguage).toBe("en");
-        expect((instance as any)._options.defaultNamespace).toBe("global");
+        expect((instance as any)._options.fallback).toBe("en");
+        expect((instance as any)._options.default).toBe("en");
         expect(instance.language()).toBe("en");
     });
 
     test("can set options", () => {
         instance = new Translator({
-            languageFallback: "es",
-            namespaceFallback: "somewhere",
-            defaultLanguage: "it",
-            defaultNamespace: "else",
+            fallback: "es",
+            default: "it",
         });
 
-        expect((instance as any)._options.languageFallback).toBe("es");
-        expect((instance as any)._options.namespaceFallback).toBe("somewhere");
-        expect((instance as any)._options.defaultLanguage).toBe("it");
-        expect((instance as any)._options.defaultNamespace).toBe("else");
+        expect((instance as any)._options.fallback).toBe("es");
+        expect((instance as any)._options.default).toBe("it");
     });
 
     test("can set partial options", () => {
         instance = new Translator({
-            defaultLanguage: "de",
+            default: "de",
         });
 
-        expect((instance as any)._options.languageFallback).toBe("en");
-        expect((instance as any)._options.namespaceFallback).toBe("global");
-        expect((instance as any)._options.defaultLanguage).toBe("de");
-        expect((instance as any)._options.defaultNamespace).toBe("global");
+        expect((instance as any)._options.fallback).toBe("en");
+        expect((instance as any)._options.default).toBe("de");
     });
 
     test("can change the language without registered listeners", () => {
@@ -52,6 +44,15 @@ describe("Translator", () => {
         instance.language("en");
         expect(spy).toHaveBeenCalledTimes(2);
         expect(instance.language()).toBe("en");
+    });
+
+    test("should trigger listener only if language is really changed", () => {
+        const spy = jest.fn();
+        instance.listen(spy);
+        instance.language("de");
+        instance.language("de");
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(instance.language()).toBe("de");
     });
 
     test("should not trigger listener on language change after unregister", () => {
@@ -81,18 +82,18 @@ describe("Translator", () => {
 
     describe("resources", () => {
         test("with one dimension can be added", () => {
-            instance.addResource("de", "myns", {
+            instance.addResource("de", {
                 myStringOne: "My string number one",
                 myStringTwo: "My string number two",
             });
             expect((instance as any)._resources).toEqual({
-                "de.myns.myStringOne": "My string number one",
-                "de.myns.myStringTwo": "My string number two",
+                "de.myStringOne": "My string number one",
+                "de.myStringTwo": "My string number two",
             });
         });
 
         test("with multi dimensions can be added", () => {
-            instance.addResource("de", "myns", {
+            instance.addResource("de", {
                 myStringOne: "My string number one",
                 my: {
                     stringTwo: "My string number two",
@@ -104,11 +105,11 @@ describe("Translator", () => {
                 myStringFive: "My string number five",
             });
             expect((instance as any)._resources).toEqual({
-                "de.myns.myStringOne": "My string number one",
-                "de.myns.my.stringTwo": "My string number two",
-                "de.myns.my.string.three": "My string number three",
-                "de.myns.my.stringFour": "My string number four",
-                "de.myns.myStringFive": "My string number five",
+                "de.myStringOne": "My string number one",
+                "de.my.stringTwo": "My string number two",
+                "de.my.string.three": "My string number three",
+                "de.my.stringFour": "My string number four",
+                "de.myStringFive": "My string number five",
             });
         });
 
@@ -121,15 +122,15 @@ describe("Translator", () => {
             ];
 
             bad.forEach((data) => {
-                expect(() => instance.addResource("de", "myns", data as any)).toThrow(
-                    `only a-Z, 0-9 and underscore allowed: "${Object.keys(data)[0]}".`,
+                expect(() => instance.addResource("de", data as any)).toThrow(
+                    `only a-Z, 0-9 and underscore allowed: "${Object.keys(data)[0]}"`,
                 );
             });
         });
 
         test("with underscore can be added on top level", () => {
             /* eslint-disable-next-line @typescript-eslint/camelcase */
-            expect(() => instance.addResource("de", "myns", {string_three: "three"})).not.toThrow();
+            expect(() => instance.addResource("de", {string_three: "three"})).not.toThrow();
         });
 
         test("only with alpha-numeric keys can be added if they have children", () => {
@@ -137,8 +138,8 @@ describe("Translator", () => {
             const bad = [{string_one: {two: "two"}}, {"string three": {four: "four"}}, {"string-five": {six: "six"}}];
 
             bad.forEach((data) => {
-                expect(() => instance.addResource("de", "myns", data as any)).toThrow(
-                    `only a-Z and 0-9 allowed: "${Object.keys(data)[0]}".`,
+                expect(() => instance.addResource("de", data as any)).toThrow(
+                    `only a-Z and 0-9 allowed: "${Object.keys(data)[0]}"`,
                 );
             });
         });
@@ -147,18 +148,8 @@ describe("Translator", () => {
             const bad = [{one: undefined}, {two: null}, {three: 100}, {four: 0}, {five: {six: Symbol.for("sym")}}];
 
             bad.forEach((data) => {
-                instance.addResource("de", "myns", data as any);
+                instance.addResource("de", data as any);
                 expect((instance as any)._resources).toEqual({});
-            });
-        });
-
-        test("only with alpha-numeric namespace tag can be added", () => {
-            const bad = ["n:s", "n.s", "n-s", "n_s", " ns", "ne "];
-
-            bad.forEach((data) => {
-                expect(() => instance.addResource("de", data, {x: "x"})).toThrow(
-                    `only a-Z and 0-9 allowed: "${data}".`,
-                );
             });
         });
 
@@ -166,36 +157,22 @@ describe("Translator", () => {
             const bad = ["d:e", "e.n", "f-r", " se", "se "];
 
             bad.forEach((data) => {
-                expect(() => instance.addResource(data, "myns", {x: "x"})).toThrow(
-                    `only a-Z and 0-9 allowed: "${data}".`,
-                );
+                expect(() => instance.addResource(data, {x: "x"})).toThrow(`only a-z allowed: "${data}"`);
             });
         });
     });
 
     describe("with loaded resources", () => {
         beforeEach(() => {
-            instance.addResource("de", "global", testResource.de.global);
-            instance.addResource("en", "global", testResource.en.global);
-            instance.addResource("en", "space", testResource.en.space);
-            instance.addResource("en", "main", testResource.en.main);
-            instance.addResource("de", "main", testResource.de.main);
+            instance.addResource("de", testResource.de);
+            instance.addResource("en", testResource.en);
         });
 
-        test("can translate from global namespace", () => {
+        test("can translate", () => {
             instance.language("de");
             expect(instance.t("item")).toBe("Ein Dings");
-            expect(instance.t("global:item")).toBe("Ein Dings");
             instance.language("en");
             expect(instance.t("item")).toBe("1 item");
-            expect(instance.t("global:item")).toBe("1 item");
-        });
-
-        test("can translate from user defined namespace", () => {
-            instance.language("de");
-            expect(instance.t("main:hello")).toBe("Und tschüss Welt");
-            instance.language("en");
-            expect(instance.t("main:hello")).toBe("Bye bye World");
         });
 
         test("can not translate missing values", () => {

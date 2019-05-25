@@ -1,10 +1,3 @@
-interface IOptions {
-    defaultLanguage?: string;
-    languageFallback?: string;
-    defaultNamespace?: string;
-    namespaceFallback?: string;
-}
-
 interface ITranslations {
     [key: string]: string | ITranslations;
 }
@@ -21,26 +14,20 @@ interface ITranslateOptions {
     };
 }
 
+interface ILanguageOptions {
+    default: string;
+    fallback: string;
+}
+
 type Listener = () => void;
 type Unsubscribe = () => void;
 
 export type TranslatorPlugin = (value: string, options?: Partial<ITranslateOptions>) => string | undefined;
 
-function validateTag(str: string) {
-    if (/[^a-z]/.test(str)) throw `only a-Z and 0-9 allowed: "${str}".`;
-}
-
-function validateProp(str: string, topLevel: boolean) {
-    if (topLevel && /[^a-zA-Z0-9_]/.test(str)) throw `only a-Z, 0-9 and underscore allowed: "${str}".`;
-    if (!topLevel && /[^a-zA-Z0-9]/.test(str)) throw `only a-Z and 0-9 allowed: "${str}".`;
-}
-
 export class Translator {
-    private readonly _options: IOptions = {
-        defaultLanguage: "en",
-        languageFallback: "en",
-        defaultNamespace: "global",
-        namespaceFallback: "global",
+    private readonly _options: ILanguageOptions = {
+        default: "en",
+        fallback: "en",
     };
 
     private _listener: Listener[] = [];
@@ -48,52 +35,33 @@ export class Translator {
     private _language: string = "en";
     private _plugins: TranslatorPlugin[] = [];
 
-    constructor(options?: IOptions) {
+    constructor(options: Partial<ILanguageOptions> = {}) {
         this._options = {...this._options, ...options};
-        /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
-        this._language = this._options.defaultLanguage!;
+        this._language = this._options.default;
     }
 
-    t(search: string, options?: Partial<ITranslateOptions>): string {
-        if (typeof options === "undefined") options = {};
-        if (typeof options.replace === "undefined") options = {...options, replace: {}};
-
-        let [namespace, key] = search.split(":");
-
-        key = typeof key === "undefined" ? `${this._options.defaultNamespace}.${namespace}` : namespace + "." + key;
-
+    t(key: string, options: Partial<ITranslateOptions> = {}): string {
+        if (options.replace === undefined) options.replace = {};
         let pattern: string[] = [key];
 
-        if (options.context) {
-            key = `${key}_${options.context}`;
-            pattern.unshift(key);
-        }
+        if (options.context) pattern.unshift((key = `${key}_${options.context}`));
 
         if (typeof options.count === "number") {
             if (options.count !== 1) pattern.unshift(`${key}_plural`);
             pattern.unshift(`${key}_${options.count}`);
-            /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
-            options.replace!["count"] = options.count.toString();
+            options.replace["count"] = options.count.toString();
         }
 
         let translated = "";
-        [this._language, this._options.languageFallback].find(
-            (language) =>
-                !!pattern.find((pat) => {
-                    if (typeof this._resources[`${language}.${pat}`] === "string") {
-                        translated = this._resources[`${language}.${pat}`];
-                        return true;
-                    }
-                    return false;
-                }),
+        [this._language, this._options.fallback].find(
+            (language) => !!pattern.find((pat) => !!(translated = this._resources[`${language}.${pat}`])),
         );
 
-        if (translated === "") return search;
+        if (!translated) return key;
 
         if (this._plugins.length) {
             this._plugins.forEach((plugin) => {
-                const value = plugin(translated, options);
-                if (typeof value === "string") translated = value;
+                translated = plugin(translated, options) || translated;
             });
         }
 
@@ -105,19 +73,16 @@ export class Translator {
     }
 
     language(language?: string): string {
-        language && validateTag(language);
-        if (language) {
+        if (language && this._language !== language) {
             this._language = language;
             this._trigger();
         }
         return this._language;
     }
 
-    addResource(language: string, namespace: string, translations: ITranslations): Translator {
-        validateTag(language);
-        validateTag(namespace);
-        this._resources = {...this._resources, ...this._parse(translations, `${language}.${namespace}`)};
-        return this;
+    addResource(language: string, translations: ITranslations) {
+        if (/[^a-z]/.test(language)) throw `only a-z allowed: "${language}"`;
+        this._resources = {...this._resources, ...this._parse(translations, language)};
     }
 
     addPlugin(plugin: TranslatorPlugin) {
@@ -146,10 +111,10 @@ export class Translator {
             const key = `${base}.${prop}`;
 
             if (typeof value === "string") {
-                validateProp(prop, true);
+                if (/[^a-zA-Z0-9_]/.test(prop)) throw `only a-Z, 0-9 and underscore allowed: "${prop}"`;
                 parsed[key] = value;
             } else {
-                validateProp(prop, false);
+                if (/[^a-zA-Z0-9]/.test(prop)) throw `only a-Z and 0-9 allowed: "${prop}"`;
                 parsed = {...parsed, ...this._parse(value, key)};
             }
         }
