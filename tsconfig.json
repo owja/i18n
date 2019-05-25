@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+
+    "rootDir": "src",
+    "sourceMap": true,
+
+    "experimentalDecorators": true,
+
+    "strict": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    "removeComments": false,
+    "noEmitHelpers": false,
+
+    "resolveJsonModule": true
+  },
+  "include": [
+    "src"
+  ]
+}

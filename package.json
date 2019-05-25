@@ -1,0 +1,55 @@
+{
+  "name": "@owja/i18n",
+  "version": "1.0.0-alpha.0",
+  "description": "lightweight internationalization library for javascript",
+  "main": "dist/i18n.js",
+  "module": "dist/i18n.mjs",
+  "source": "src/index.ts",
+  "types": "dist/index.d.ts",
+  "keywords": [
+    "typescript",
+    "internationalization",
+    "i18n",
+    "javascript",
+    "translation",
+    "translating"
+  ],
+  "scripts": {
+    "build": "(rm -r dist/* || true) && microbundle --format es,cjs",
+    "test": "jest",
+    "lint": "eslint --ext .ts,.js ./",
+    "lint:fix": "eslint --ext .ts,.js ./ --fix",
+    "prettier": "prettier src/**/*.ts --check",
+    "prettier:fix": "prettier src/**/*.ts --write",
+    "release": "npm run build && npm run lint && npm run prettier && npm run test && npm login && npm publish --access public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/owja/i18n.git"
+  },
+  "bugs": {
+    "url": "https://github.com/owja/i18n/issues"
+  },
+  "homepage": "https://github.com/owja/i18n",
+  "author": "Hauke Broer <info@owja.de>",
+  "license": "CC-BY-4.0",
+  "devDependencies": {
+    "@types/jest": "^24.0.13",
+    "@typescript-eslint/eslint-plugin": "^1.9.0",
+    "@typescript-eslint/parser": "^1.9.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-jest": "^22.5.1",
+    "jest": "^24.8.0",
+    "microbundle": "^0.11.0",
+    "prettier": "^1.17.1",
+    "ts-jest": "^24.0.2",
+    "ts-node": "^8.1.0",
+    "typescript": "^3.4.5"
+  },
+  "mangle": {
+    "regex": "^_"
+  },
+  "files": [
+    "/dist"
+  ]
+}
