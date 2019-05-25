@@ -116,7 +116,7 @@ export class Translator {
     addResource(language: string, namespace: string, translations: ITranslations): Translator {
         validateTag(language);
         validateTag(namespace);
-        this._resources = {...this._resources, ...this._parse(translations, language + "." + namespace)};
+        this._resources = {...this._resources, ...this._parse(translations, `${language}.${namespace}`)};
         return this;
     }
 
@@ -125,37 +125,32 @@ export class Translator {
     }
 
     listen(listener: Listener): Unsubscribe {
-        if (this._listener.indexOf(listener) !== -1) {
-            throw "you can add a listener only once";
-        }
-
-        this._listener.push(listener);
-
-        return () => {
+        const unsubscribe = () => {
             const idx = this._listener.indexOf(listener);
-            if (idx === -1) throw "the listener is not registered";
+            if (idx === -1) return;
             this._listener.splice(idx, 1);
         };
+
+        if (this._listener.indexOf(listener) !== -1) return unsubscribe;
+        this._listener.push(listener);
+        return unsubscribe;
     }
 
     private _parse(translations: ITranslations, base: string): IParsedTranslations {
         let parsed: IParsedTranslations = {};
 
         for (const prop in translations) {
-            if (typeof translations[prop] !== "string" && typeof translations[prop] !== "object") continue;
+            const value = translations[prop];
+            if (typeof value !== "string" && typeof value !== "object") continue;
 
             const key = `${base}.${prop}`;
-            const value = translations[prop];
 
-            switch (typeof value) {
-                case "string":
-                    validateProp(prop, true);
-                    parsed[key] = value;
-                    break;
-                case "object":
-                    validateProp(prop, false);
-                    parsed = {...parsed, ...this._parse(value, key)};
-                    break;
+            if (typeof value === "string") {
+                validateProp(prop, true);
+                parsed[key] = value;
+            } else {
+                validateProp(prop, false);
+                parsed = {...parsed, ...this._parse(value, key)};
             }
         }
 

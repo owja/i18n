@@ -67,14 +67,16 @@ describe("Translator", () => {
     test("can register a listener only once", () => {
         const listener = () => undefined;
         instance.listen(listener);
-        expect(() => instance.listen(listener)).toThrow("you can add a listener only once");
+        instance.listen(listener);
+        expect((instance as any)._listener).toHaveLength(1);
     });
 
     test("can unregister a listener only if it is not unregistered before", () => {
         const listener = () => undefined;
         const unregister = instance.listen(listener);
         unregister();
-        expect(() => unregister()).toThrow("the listener is not registered");
+        unregister();
+        expect((instance as any)._listener).toHaveLength(0);
     });
 
     describe("resources", () => {
