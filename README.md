@@ -4,14 +4,14 @@
 [![codecov](https://codecov.io/gh/owja/i18n/branch/master/graph/badge.svg)](https://codecov.io/gh/owja/ioc)
 [![Greenkeeper badge](https://badges.greenkeeper.io/owja/i18n.svg)](https://greenkeeper.io/)
 [![Build Status](https://travis-ci.org/owja/i18n.svg?branch=master)](https://travis-ci.org/owja/ioc)
-[![gzip size](http://img.badgesize.io/https://unpkg.com/@owja/i18n/dist/i18n.mjs?compression=gzip)](https://unpkg.com/@owja/i18n/dist/i18n.mjs)
+[![size](https://img.badgesize.io/https://unpkg.com/@owja/i18n/dist/i18n.mjs.svg?compression=gzip&label=size&max=1000&softmax=800)](https://unpkg.com/@owja/i18n/dist/i18n.mjs)
 
 This is a lightweight internationalization library which is in early **alpha** state. This means it is
 work in progress, unstable, can contain bugs and the API can change until first stable release.
 
 ### Features
 
-* lightweight gz bundle size <1kb
+* lightweight bundle size **less than 1 kb (gzip)**
 * no global state
 * it is made with dependency injection in mind
 * Build-in support for basic plurals, interpolation and context
