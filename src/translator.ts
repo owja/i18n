@@ -1,30 +1,16 @@
-interface ITranslations {
-    [key: string]: string | ITranslations;
-}
+import {
+    ILanguageOptions,
+    IParsedTranslations,
+    IPluginRegistry,
+    ITranslateOptions,
+    ITranslations,
+    ITranslator,
+    Listener,
+    TranslatorPlugin,
+    Unsubscribe,
+} from "./interfaces";
 
-interface IParsedTranslations {
-    [search: string]: string;
-}
-
-interface ITranslateOptions {
-    context: string;
-    count: number;
-    replace: {
-        [search: string]: string;
-    };
-}
-
-interface ILanguageOptions {
-    default: string;
-    fallback: string;
-}
-
-type Listener = () => void;
-type Unsubscribe = () => void;
-
-export type TranslatorPlugin = (value: string, options?: Partial<ITranslateOptions>) => string | undefined;
-
-export class Translator {
+export class Translator implements ITranslator {
     private readonly _options: ILanguageOptions = {
         default: "en",
         fallback: "en",
@@ -33,7 +19,7 @@ export class Translator {
     private _listener: Listener[] = [];
     private _resources: IParsedTranslations = {};
     private _language: string = "en";
-    private _plugins: TranslatorPlugin[] = [];
+    private _registry: IPluginRegistry = {};
 
     constructor(options: Partial<ILanguageOptions> = {}) {
         this._options = {...this._options, ...options};
@@ -59,11 +45,9 @@ export class Translator {
 
         if (!translated) return key;
 
-        if (this._plugins.length) {
-            this._plugins.forEach((plugin) => {
-                translated = plugin(translated, options) || translated;
-            });
-        }
+        (this._registry["global"] || []).concat(this._registry[this._language] || []).forEach((plugin) => {
+            translated = plugin(translated, options, this) || translated;
+        });
 
         for (const find in options.replace) {
             translated = translated.replace("{{" + find + "}}", options.replace[find]);
@@ -83,10 +67,15 @@ export class Translator {
     addResource(language: string, translations: ITranslations) {
         if (/[^a-z]/.test(language)) throw `only a-z allowed: "${language}"`;
         this._resources = {...this._resources, ...this._parse(translations, language)};
+        this._trigger();
     }
 
-    addPlugin(plugin: TranslatorPlugin) {
-        this._plugins.push(plugin);
+    addPlugin(language: string = "global", plugin: TranslatorPlugin) {
+        if (this._registry[language] === undefined) {
+            this._registry[language] = [];
+        }
+        this._registry[language].push(plugin);
+        this._trigger();
     }
 
     listen(listener: Listener): Unsubscribe {
