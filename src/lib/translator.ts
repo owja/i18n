@@ -47,13 +47,13 @@ export class Translator implements TranslatorInterface {
 
         if (!translated) return key;
 
+        for (const find in options.replace) {
+            translated = translated.replace("{{" + find + "}}", options.replace[find].toString());
+        }
+
         (this._registry["global"] || []).concat(this._registry[this._language] || []).forEach((plugin) => {
             translated = plugin(translated, options, this) || translated;
         });
-
-        for (const find in options.replace) {
-            translated = translated.replace("{{" + find + "}}", options.replace[find]);
-        }
 
         return translated;
     }
