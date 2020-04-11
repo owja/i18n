@@ -142,6 +142,6 @@ That's why it shares some similarities.
 
 ### License
 
-License under [Creative Commons Attribution 4.0 International](https://spdx.org/licenses/CC-BY-4.0.html)
+**MIT**
 
-Copyright © 2019 Hauke Broer
+Copyright © 2019 - 2020 Hauke Broer
