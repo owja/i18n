@@ -18,8 +18,8 @@
     "prepack": "npm run test && npm run lint && npm run prettier && npm run build",
     "build": "rm -rf dist && microbundle --format es,cjs",
     "test": "cross-env NODE_ICU_DATA=node_modules/full-icu jest",
-    "lint": "eslint --ext .ts,.js ./",
-    "lint:fix": "eslint --ext .ts,.js ./ --fix",
+    "lint": "eslint --ext .ts,.js ./src",
+    "lint:fix": "eslint --ext .ts,.js ./src --fix",
     "prettier": "prettier \"src/**/*.ts\" --check",
     "prettier:fix": "prettier \"src/**/*.ts\" --write"
   },
