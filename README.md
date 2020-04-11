@@ -45,7 +45,7 @@ many cases they are not needed or you need only one or two and not all.
 ##### Step 1 - Creating an instance of the Translator 
 
 ```ts
-@import {Translator} from "@owja/i18n";
+import {Translator} from "@owja/i18n";
 const translator = new Translator({default:"de",fallback:"en"});
 ```
 If you using a dependency injection, you can bind the `.t()` method of the `translator` constant 
