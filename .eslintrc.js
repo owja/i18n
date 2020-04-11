@@ -15,6 +15,7 @@ module.exports =  {
         "@typescript-eslint/no-parameter-properties": "off",
         "@typescript-eslint/interface-name-prefix": "off",
         "@typescript-eslint/no-explicit-any": ["off"],
+        "@typescript-eslint/prefer-interface": ["off"],
         "jest/no-disabled-tests": "warn",
         "jest/no-focused-tests": "error",
         "jest/no-identical-title": "error",

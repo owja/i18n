@@ -1,32 +1,32 @@
 import {
-    ILanguageOptions,
-    IParsedTranslations,
-    IPluginRegistry,
-    ITranslateOptions,
-    ITranslations,
-    ITranslator,
+    LanguageOptions,
+    ParsedTranslations,
+    PluginRegistry,
+    TranslateOptions,
+    Translations,
+    TranslatorInterface,
     Listener,
     TranslatorPlugin,
     Unsubscribe,
 } from "./interfaces";
 
-export class Translator implements ITranslator {
-    private readonly _options: ILanguageOptions = {
+export class Translator implements TranslatorInterface {
+    private readonly _options: LanguageOptions = {
         default: "en",
         fallback: "en",
     };
 
     private _listener: Listener[] = [];
-    private _resources: IParsedTranslations = {};
+    private _resources: ParsedTranslations = {};
     private _language: string = "en";
-    private _registry: IPluginRegistry = {};
+    private _registry: PluginRegistry = {};
 
-    constructor(options: Partial<ILanguageOptions> = {}) {
+    constructor(options: Partial<LanguageOptions> = {}) {
         this._options = {...this._options, ...options};
         this._language = this._options.default;
     }
 
-    t(key: string, options: Partial<ITranslateOptions> = {}): string {
+    t(key: string, options: Partial<TranslateOptions> = {}): string {
         if (options.replace === undefined) options.replace = {};
         let pattern: string[] = [key];
 
@@ -64,7 +64,7 @@ export class Translator implements ITranslator {
         return this._language;
     }
 
-    addResource(language: string, translations: ITranslations) {
+    addResource(language: string, translations: Translations) {
         if (/[^a-z]/.test(language)) throw `only a-z allowed: "${language}"`;
         this._resources = {...this._resources, ...this._parse(translations, language)};
         this._trigger();
@@ -90,10 +90,12 @@ export class Translator implements ITranslator {
         return unsubscribe;
     }
 
-    private _parse(translations: ITranslations, base: string): IParsedTranslations {
-        let parsed: IParsedTranslations = {};
+    private _parse(translations: Translations, base: string): ParsedTranslations {
+        let parsed: ParsedTranslations = {};
 
         for (const prop in translations) {
+            if (!translations.hasOwnProperty(prop)) continue;
+
             const value = translations[prop];
             if (typeof value !== "string" && typeof value !== "object") continue;
 

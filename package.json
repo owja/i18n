@@ -3,9 +3,9 @@
   "version": "1.0.0-alpha.0",
   "description": "lightweight internationalization library for javascript",
   "main": "dist/i18n.js",
-  "module": "dist/i18n.mjs",
-  "source": "src/translator.ts",
-  "types": "dist/translator.d.ts",
+  "module": "dist/i18n.module.js",
+  "source": "src/index.ts",
+  "types": "dist/index.d.ts",
   "keywords": [
     "typescript",
     "internationalization",
@@ -15,13 +15,13 @@
     "translating"
   ],
   "scripts": {
-    "build": "(rm -r dist/* || true) && microbundle --format es,cjs",
+    "prepack": "npm run test && npm run lint && npm run prettier && npm run build",
+    "build": "rm -rf dist && microbundle --format es,cjs",
     "test": "cross-env NODE_ICU_DATA=node_modules/full-icu jest",
     "lint": "eslint --ext .ts,.js ./",
     "lint:fix": "eslint --ext .ts,.js ./ --fix",
-    "prettier": "prettier src/**/*.ts --check",
-    "prettier:fix": "prettier src/**/*.ts --write",
-    "release": "npm run build && npm run lint && npm run prettier && npm run test && npm login && npm publish --access public"
+    "prettier": "prettier \"src/**/*.ts\" --check",
+    "prettier:fix": "prettier \"src/**/*.ts\" --write"
   },
   "repository": {
     "type": "git",
@@ -52,6 +52,7 @@
     "regex": "^_"
   },
   "files": [
-    "/dist"
+    "/dist",
+    "/src"
   ]
 }

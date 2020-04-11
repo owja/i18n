@@ -1,41 +1,43 @@
-export interface ITranslator {
-    t(key: string, options: Partial<ITranslateOptions>): string;
+export type TranslateFunction = (key: string, options?: Partial<TranslateOptions>) => string;
+
+export interface TranslatorInterface {
+    t: TranslateFunction;
     language(language?: string): string;
-    addResource(language: string, translations: ITranslations): void;
+    addResource(language: string, translations: Translations): void;
     addPlugin(language: string, plugin: TranslatorPlugin): void;
     listen(listener: Listener): Unsubscribe;
 }
 
-export interface ITranslations {
-    [key: string]: string | ITranslations;
-}
+export type Translations = {
+    [key: string]: string | Translations;
+};
 
-export interface IParsedTranslations {
+export type ParsedTranslations = {
     [search: string]: string;
-}
+};
 
-export interface ITranslateOptions {
+export type TranslateOptions = {
     context: string;
     count: number;
     replace: {
         [search: string]: string;
     };
-}
+};
 
-export interface ILanguageOptions {
+export type LanguageOptions = {
     default: string;
     fallback: string;
-}
+};
 
 export type Listener = () => void;
 export type Unsubscribe = () => void;
 
 export type TranslatorPlugin = (
     translated: string,
-    options: Partial<ITranslateOptions>,
-    translator: ITranslator,
+    options: Partial<TranslateOptions>,
+    translator: TranslatorInterface,
 ) => string | undefined;
 
-export interface IPluginRegistry {
+export type PluginRegistry = {
     [language: string]: TranslatorPlugin[];
-}
+};

@@ -1,5 +1,5 @@
-import {Translator} from "./translator";
-import testResource from "./test/test.json";
+import {Translator} from "../index";
+import testResource from "../test/test.json";
 
 describe("Translator", () => {
     let instance: Translator;
