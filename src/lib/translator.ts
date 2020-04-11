@@ -24,6 +24,8 @@ export class Translator implements TranslatorInterface {
     constructor(options: Partial<LanguageOptions> = {}) {
         this._options = {...this._options, ...options};
         this._language = this._options.default;
+
+        this.t = this.t.bind(this);
     }
 
     t(key: string, options: Partial<TranslateOptions> = {}): string {
