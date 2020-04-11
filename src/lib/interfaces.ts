@@ -4,7 +4,7 @@ export interface TranslatorInterface {
     t: TranslateFunction;
     language(language?: string): string;
     addResource(language: string, translations: Translations): void;
-    addPlugin(language: string, plugin: TranslatorPlugin): void;
+    addPlugin(plugin: TranslatorPlugin, language?: string): void;
     listen(listener: Listener): Unsubscribe;
 }
 

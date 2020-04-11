@@ -18,7 +18,7 @@ export class Translator implements TranslatorInterface {
 
     private _listener: Listener[] = [];
     private _resources: ParsedTranslations = {};
-    private _language: string = "en";
+    private _language = "en";
     private _registry: PluginRegistry = {};
 
     constructor(options: Partial<LanguageOptions> = {}) {
@@ -28,7 +28,7 @@ export class Translator implements TranslatorInterface {
 
     t(key: string, options: Partial<TranslateOptions> = {}): string {
         if (options.replace === undefined) options.replace = {};
-        let pattern: string[] = [key];
+        const pattern: string[] = [key];
 
         if (options.context) pattern.unshift((key = `${key}_${options.context}`));
 
@@ -70,7 +70,7 @@ export class Translator implements TranslatorInterface {
         this._trigger();
     }
 
-    addPlugin(language: string = "global", plugin: TranslatorPlugin) {
+    addPlugin(plugin: TranslatorPlugin, language = "global") {
         if (this._registry[language] === undefined) {
             this._registry[language] = [];
         }

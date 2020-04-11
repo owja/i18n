@@ -3,7 +3,7 @@ interface IValue {
     arguments: string[];
 }
 
-export default function(translated: string, find: string): IValue[] {
+export default function (translated: string, find: string): IValue[] {
     const search = new RegExp("(\\[\\[(" + find + ")(\\|(.*?))?\\]\\])", "gm");
     const values: IValue[] = [];
 

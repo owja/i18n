@@ -1,7 +1,7 @@
 import {TranslatorPlugin} from "./interfaces";
 import Parser from "./plugin-parser";
 
-export function createPlugin(
+export function createCurrencyPlugin(
     locale: string,
     defaultCurrency: string,
     options: Intl.NumberFormatOptions = {},
@@ -10,11 +10,11 @@ export function createPlugin(
         ...options,
         ...{style: "currency"},
     };
-    return function(translated: string) {
+    return function (translated: string) {
         const values = Parser(translated, "currency");
 
         values.forEach((value) => {
-            let num: number = parseFloat(value.arguments[0] || "0");
+            const num: number = parseFloat(value.arguments[0] || "0");
             if (!isNaN(num)) {
                 translated = translated.replace(
                     value.match,
