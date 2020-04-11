@@ -1,10 +1,10 @@
 ![OWJA! i18n](resources/owja-i18n-logo.png)
 
-[![npm version](https://img.shields.io/npm/v/@owja/i18n.svg)](https://badge.fury.io/js/%40owja%2Fioc)
-[![codecov](https://codecov.io/gh/owja/i18n/branch/master/graph/badge.svg)](https://codecov.io/gh/owja/ioc)
+[![npm version](https://img.shields.io/npm/v/@owja/i18n.svg)](https://badge.fury.io/js/%40owja%2Fi18n)
+[![codecov](https://codecov.io/gh/owja/i18n/branch/master/graph/badge.svg)](https://codecov.io/gh/owja/i18n)
 [![Greenkeeper badge](https://badges.greenkeeper.io/owja/i18n.svg)](https://greenkeeper.io/)
-[![Build Status](https://travis-ci.org/owja/i18n.svg?branch=master)](https://travis-ci.org/owja/ioc)
-[![size](https://img.badgesize.io/https://unpkg.com/@owja/i18n/dist/i18n.mjs.svg?compression=gzip&label=size&max=1000&softmax=800)](https://unpkg.com/@owja/i18n/dist/i18n.mjs)
+[![Build Status](https://travis-ci.org/owja/i18n.svg?branch=master)](https://travis-ci.org/owja/i18n)
+[![size](https://img.badgesize.io/https://unpkg.com/@owja/i18n/dist/i18n.module.js.svg?compression=gzip&label=size&max=2000&softmax=1500)](https://unpkg.com/@owja/i18n/dist/i18n.module.js)
 
 This is a lightweight internationalization library which is in early **alpha** state. This means it is
 work in progress, unstable, can contain bugs and the API can change until first stable release.
