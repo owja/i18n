@@ -1,6 +1,6 @@
 {
   "name": "@owja/i18n",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "lightweight internationalization library for javascript",
   "main": "dist/i18n.js",
   "module": "dist/i18n.module.js",
