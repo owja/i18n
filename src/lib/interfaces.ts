@@ -20,7 +20,7 @@ export type TranslateOptions = {
     context: string;
     count: number;
     replace: {
-        [search: string]: string | number;
+        [search: string]: string | number | Date;
     };
 };
 
