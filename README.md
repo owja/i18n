@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/owja/i18n/branch/master/graph/badge.svg)](https://codecov.io/gh/owja/i18n)
 [![Greenkeeper badge](https://badges.greenkeeper.io/owja/i18n.svg)](https://greenkeeper.io/)
 [![Build Status](https://travis-ci.org/owja/i18n.svg?branch=master)](https://travis-ci.org/owja/i18n)
-[![size](https://img.badgesize.io/https://unpkg.com/@owja/i18n/dist/i18n.module.js.svg?compression=gzip&label=size&max=2000&softmax=1500)](https://unpkg.com/@owja/i18n/dist/i18n.module.js)
+[![size](https://img.badgesize.io/https://unpkg.com/@owja/i18n/index.module.js.svg?compression=gzip&label=size&max=2000&softmax=1500)](https://unpkg.com/@owja/i18n/index.module.js)
 
 This is a lightweight internationalization library which is in early **alpha** state. This means it is
 work in progress, unstable, can contain bugs and the API can change until first stable release.
