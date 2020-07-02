@@ -87,13 +87,9 @@ export function createDateTimePlugin(
             }
 
             for (const value of set.values) {
-                let pattern: string | undefined = value.arguments[0];
-                let format: string = value.arguments[1] || defaultFormat || "short";
-                let timeZone: string | undefined = value.arguments[2] || defaultTimezone;
-
-                if (!formats) {
-                    formats = defaultFormats;
-                }
+                const pattern: string | undefined = value.arguments[0];
+                const format: string = value.arguments[1] || defaultFormat || "short";
+                const timeZone: string | undefined = value.arguments[2] || defaultTimezone;
 
                 let date: Date;
                 if (!pattern) {
@@ -106,7 +102,7 @@ export function createDateTimePlugin(
 
                 translated = translated.replace(
                     value.match,
-                    new Intl.DateTimeFormat(locale, {...formats[format], ...reduce, timeZone}).format(date),
+                    new Intl.DateTimeFormat(locale, {...(formats || defaultFormats)[format], ...reduce, timeZone}).format(date),
                 );
             }
         }
