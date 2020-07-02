@@ -2,21 +2,43 @@
   "name": "@owja/i18n",
   "version": "1.0.0-alpha.1",
   "description": "lightweight internationalization library for javascript",
-  "main": "dist/i18n.js",
-  "module": "dist/i18n.module.js",
+  "main": "dist/main.js",
+  "module": "dist/main.module.js",
   "source": "src/index.ts",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "browser": "./dist/main.module.js",
+      "require": "./dist/main.js",
+      "import": "./dist/main.mjs"
+    },
+    "./plugins": {
+      "browser": "./dist/plugins.module.js",
+      "require": "./dist/plugins.js",
+      "import": "./dist/plugins.mjs"
+    },
+    "./package.json": "./package.json"
+  },
   "keywords": [
     "typescript",
     "internationalization",
+    "intl",
     "i18n",
     "javascript",
     "translation",
-    "translating"
+    "translating",
+    "date formatter",
+    "time formatter",
+    "number formatter",
+    "currency formatter"
   ],
   "scripts": {
     "prepack": "npm run test && npm run lint && npm run prettier && npm run build",
-    "build": "rm -rf dist && microbundle --format es,cjs",
+    "prebuild": "shx rm -rf dist",
+    "build": "npm run build:main && npm run build:plugins",
+    "build:main": "microbundle -i src/main.ts -o dist/main.js --format es,cjs",
+    "build:plugins": "microbundle -i src/plugins.ts -o dist/plugins.js --format es,cjs",
+    "postbuild": "cp dist/plugins.module.js dist/plugins.mjs && cp dist/main.module.js dist/main.mjs",
     "test": "cross-env NODE_ICU_DATA=node_modules/full-icu jest",
     "lint": "eslint --ext .ts,.js ./src",
     "lint:fix": "eslint --ext .ts,.js ./src --fix",
@@ -32,7 +54,7 @@
   },
   "homepage": "https://github.com/owja/i18n",
   "author": "Hauke Broer <info@owja.de>",
-  "license": "CC-BY-4.0",
+  "license": "MIT",
   "devDependencies": {
     "@types/jest": "^25.2.3",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
@@ -42,8 +64,9 @@
     "eslint-plugin-jest": "^23.17.1",
     "full-icu": "^1.3.1",
     "jest": "^25.5.4",
-    "microbundle": "^0.11.0",
+    "microbundle": "^0.12.2",
     "prettier": "^2.0.5",
+    "shx": "^0.3.2",
     "ts-jest": "^25.5.1",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.6"
@@ -54,5 +77,9 @@
   "files": [
     "/dist",
     "/src"
+  ],
+  "browserslist": [
+    "since 2018-11 and >0%",
+    "node >= 12"
   ]
 }
