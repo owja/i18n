@@ -197,8 +197,10 @@ describe("Translator", () => {
         test("can translate with replace option", () => {
             instance.language("de");
             expect(instance.t("hello", {replace: {what: "Welt"}})).toBe("Hallo Welt");
+            expect(instance.t("hello2", {replace: {what: "Welt"}})).toBe("Hallo Welt Welt");
             instance.language("en");
             expect(instance.t("hello", {replace: {what: "World"}})).toBe("Hello World");
+            expect(instance.t("hello2", {replace: {what: "World"}})).toBe("Hello World World");
         });
 
         test("can translate with context option", () => {
