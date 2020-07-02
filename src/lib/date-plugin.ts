@@ -4,7 +4,7 @@ import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
 export type Formats = {
     [type: string]: DateTimeFormatOptions;
-}
+};
 
 export const defaultFormats: Formats = {
     short: {
@@ -28,7 +28,7 @@ export const defaultFormats: Formats = {
         hour: "numeric",
         minute: "2-digit",
         second: "2-digit",
-        timeZoneName: "short"
+        timeZoneName: "short",
     },
     extended: {
         year: "numeric",
@@ -37,22 +37,22 @@ export const defaultFormats: Formats = {
         hour: "numeric",
         minute: "2-digit",
         second: "2-digit",
-        timeZoneName: "long"
-    }
-}
+        timeZoneName: "long",
+    },
+};
 
 const reduceDateFormat = {
     hour: undefined,
     minute: undefined,
     second: undefined,
-    timeZoneName: undefined
+    timeZoneName: undefined,
 };
 
 const reduceTimeFormat = {
     hour: undefined,
     minute: undefined,
     second: undefined,
-    timeZoneName: undefined
+    timeZoneName: undefined,
 };
 
 export function createDateTimePlugin(
