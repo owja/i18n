@@ -48,7 +48,10 @@ export class Translator implements TranslatorInterface {
         if (!translated) return key;
 
         for (const find in options.replace) {
-            translated = translated.replace("{{" + find + "}}", options.replace[find].toString());
+            translated = translated.replace(
+                new RegExp(Translator._escapeRegExp("{{" + find + "}}"), "g"),
+                options.replace[find].toString(),
+            );
         }
 
         (this._registry["global"] || []).concat(this._registry[this._language] || []).forEach((plugin) => {
@@ -90,6 +93,10 @@ export class Translator implements TranslatorInterface {
         if (this._listener.indexOf(listener) !== -1) return unsubscribe;
         this._listener.push(listener);
         return unsubscribe;
+    }
+
+    private static _escapeRegExp(string: string) {
+        return string.replace(/[.*+\-?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
     }
 
     private _parse(translations: Translations, base: string): ParsedTranslations {
