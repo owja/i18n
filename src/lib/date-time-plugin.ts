@@ -11,14 +11,14 @@ export const defaultFormats: Formats = {
         year: "2-digit",
         month: "numeric",
         day: "numeric",
-        hour: "2-digit",
+        hour: "numeric",
         minute: "2-digit",
     },
     medium: {
         year: "numeric",
         month: "short",
         day: "numeric",
-        hour: "2-digit",
+        hour: "numeric",
         minute: "2-digit",
     },
     long: {
@@ -27,7 +27,6 @@ export const defaultFormats: Formats = {
         day: "numeric",
         hour: "numeric",
         minute: "2-digit",
-        second: "2-digit",
         timeZoneName: "short",
     },
     extended: {
@@ -36,7 +35,6 @@ export const defaultFormats: Formats = {
         day: "numeric",
         hour: "numeric",
         minute: "2-digit",
-        second: "2-digit",
         timeZoneName: "long",
     },
 };
@@ -49,19 +47,22 @@ const reduceDateFormat = {
 };
 
 const reduceTimeFormat = {
-    hour: undefined,
-    minute: undefined,
-    second: undefined,
-    timeZoneName: undefined,
+    year: undefined,
+    month: undefined,
+    day: undefined,
 };
 
 export function createDateTimePlugin(
-    locale: string,
-    defaultFormat?: string,
+    locale?: string,
     defaultTimezone?: string,
+    defaultFormat?: string,
     formats?: Formats,
 ): TranslatorPlugin {
-    return function (translated: string, options) {
+    return function (translated: string, options, translator) {
+        if (!locale) {
+            locale = translator.language();
+        }
+
         const sets = [
             {
                 type: "date",
@@ -69,7 +70,7 @@ export function createDateTimePlugin(
             },
             {
                 type: "time",
-                values: Parser(translated, "date"),
+                values: Parser(translated, "time"),
             },
             {
                 type: "datetime",
@@ -92,12 +93,6 @@ export function createDateTimePlugin(
 
                 if (!formats) {
                     formats = defaultFormats;
-                }
-
-                if (pattern && formats.hasOwnProperty(pattern)) {
-                    timeZone = format;
-                    format = pattern;
-                    pattern = undefined;
                 }
 
                 let date: Date;

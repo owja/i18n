@@ -48,10 +48,9 @@ export class Translator implements TranslatorInterface {
         if (!translated) return key;
 
         for (const find in options.replace) {
-            translated = translated.replace(
-                new RegExp(Translator._escapeRegExp("{{" + find + "}}"), "g"),
-                options.replace[find].toString(),
-            );
+            let replace = options.replace[find];
+            replace = typeof replace === "object" ? replace.toISOString() : replace.toString();
+            translated = translated.replace(new RegExp(Translator._escapeRegExp("{{" + find + "}}"), "g"), replace);
         }
 
         (this._registry["global"] || []).concat(this._registry[this._language] || []).forEach((plugin) => {
