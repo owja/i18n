@@ -83,11 +83,11 @@ describe("Translator", () => {
     describe("resources", () => {
         test("with one dimension can be added", () => {
             instance.addResource("de", {
-                myStringOne: "My string number one",
+                "my-string-one": "My string number one",
                 myStringTwo: "My string number two",
             });
             expect((instance as any)._resources).toEqual({
-                "de.myStringOne": "My string number one",
+                "de.my-string-one": "My string number one",
                 "de.myStringTwo": "My string number two",
             });
         });
@@ -116,14 +116,14 @@ describe("Translator", () => {
         test("only with alpha-numeric with optional underscore keys can be added on top level", () => {
             const bad = [
                 {"string:one": "one"},
-                {"string-two": "two"},
+                {"string=two": "two"},
                 {DJJürgen: "DJ Günther"},
                 {"DJ Gunther": "DJGunther"},
             ];
 
             bad.forEach((data) => {
                 expect(() => instance.addResource("de", data as any)).toThrow(
-                    `only a-Z, 0-9 and underscore allowed: "${Object.keys(data)[0]}"`,
+                    `only a-Z, 0-9, minus sign and underscore allowed: "${Object.keys(data)[0]}"`,
                 );
             });
         });
@@ -133,13 +133,13 @@ describe("Translator", () => {
             expect(() => instance.addResource("de", {string_three: "three"})).not.toThrow();
         });
 
-        test("only with alpha-numeric keys can be added if they have children", () => {
+        test("only with alpha-numeric keys (and minus sign) can be added if they have children", () => {
             /* eslint-disable-next-line @typescript-eslint/camelcase */
-            const bad = [{string_one: {two: "two"}}, {"string three": {four: "four"}}, {"string-five": {six: "six"}}];
+            const bad = [{string_one: {two: "two"}}, {"string three": {four: "four"}}, {string_five: {six: "six"}}];
 
             bad.forEach((data) => {
                 expect(() => instance.addResource("de", data as any)).toThrow(
-                    `only a-Z and 0-9 allowed: "${Object.keys(data)[0]}"`,
+                    `only a-Z, minus sign and 0-9 allowed: "${Object.keys(data)[0]}"`,
                 );
             });
         });

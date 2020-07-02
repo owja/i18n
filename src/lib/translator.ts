@@ -110,10 +110,10 @@ export class Translator implements TranslatorInterface {
             const key = `${base}.${prop}`;
 
             if (typeof value === "string") {
-                if (/[^a-zA-Z0-9_]/.test(prop)) throw `only a-Z, 0-9 and underscore allowed: "${prop}"`;
+                if (/[^a-zA-Z0-9_\-]/.test(prop)) throw `only a-Z, 0-9, minus sign and underscore allowed: "${prop}"`;
                 parsed[key] = value;
             } else {
-                if (/[^a-zA-Z0-9]/.test(prop)) throw `only a-Z and 0-9 allowed: "${prop}"`;
+                if (/[^a-zA-Z0-9\-]/.test(prop)) throw `only a-Z, minus sign and 0-9 allowed: "${prop}"`;
                 parsed = {...parsed, ...this._parse(value, key)};
             }
         }
