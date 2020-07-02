@@ -102,7 +102,11 @@ export function createDateTimePlugin(
 
                 translated = translated.replace(
                     value.match,
-                    new Intl.DateTimeFormat(locale, {...(formats || defaultFormats)[format], ...reduce, timeZone}).format(date),
+                    new Intl.DateTimeFormat(locale, {
+                        ...(formats || defaultFormats)[format],
+                        ...reduce,
+                        timeZone,
+                    }).format(date),
                 );
             }
         }
