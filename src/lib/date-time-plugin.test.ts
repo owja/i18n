@@ -1,6 +1,5 @@
-import {TranslatorPlugin} from "./interfaces";
-import {Translator} from "./translator";
-import {createDateTimePlugin} from "./date-time-plugin";
+import {TranslatorPlugin, Translator} from "../";
+import {createDateTimePlugin} from "../plugins";
 
 describe("DateTime Plugin", () => {
     let plugin: TranslatorPlugin;

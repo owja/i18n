@@ -1,6 +1,5 @@
-import {TranslatorPlugin} from "./interfaces";
-import {createCurrencyPlugin} from "./currency-plugin";
-import {Translator} from "./translator";
+import {TranslatorPlugin, Translator} from "../";
+import {createCurrencyPlugin} from "../plugins";
 
 describe("Currency Plugin", () => {
     let plugin: TranslatorPlugin;

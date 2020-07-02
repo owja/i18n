@@ -1,5 +1,5 @@
 import {TranslatorPlugin} from "./interfaces";
-import Parser from "./plugin-parser";
+import {Parser} from "./plugin-parser";
 
 export function createCurrencyPlugin(
     locale: string,

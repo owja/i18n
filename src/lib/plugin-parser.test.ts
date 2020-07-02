@@ -1,4 +1,4 @@
-import Parser from "./plugin-parser";
+import {Parser} from "../plugins";
 
 describe("Plugin Parser", () => {
     test("can find pattern", () => {

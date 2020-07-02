@@ -1,23 +1,24 @@
 {
   "name": "@owja/i18n",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "lightweight internationalization library for javascript",
-  "main": "dist/main.js",
-  "module": "dist/main.module.js",
+  "main": "index.js",
+  "module": "index.module.js",
   "source": "src/index.ts",
-  "types": "dist/index.d.ts",
+  "types": "index.d.ts",
   "exports": {
     ".": {
-      "browser": "./dist/main.module.js",
-      "require": "./dist/main.js",
-      "import": "./dist/main.mjs"
+      "browser": "./index.module.js",
+      "require": "./index.js",
+      "import": "./index.mjs"
     },
     "./plugins": {
-      "browser": "./dist/plugins.module.js",
-      "require": "./dist/plugins.js",
-      "import": "./dist/plugins.mjs"
+      "browser": "./index.module.js",
+      "require": "./index.js",
+      "import": "./index.mjs"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./": "./"
   },
   "keywords": [
     "typescript",
@@ -34,11 +35,14 @@
   ],
   "scripts": {
     "prepack": "npm run test && npm run lint && npm run prettier && npm run build",
-    "prebuild": "shx rm -rf dist",
+    "postpack": "npm run clean",
+    "prebuild": "shx rm -rf lib",
     "build": "npm run build:main && npm run build:plugins",
-    "build:main": "microbundle -i src/main.ts -o dist/main.js --format es,cjs",
-    "build:plugins": "microbundle -i src/plugins.ts -o dist/plugins.js --format es,cjs",
-    "postbuild": "cp dist/plugins.module.js dist/plugins.mjs && cp dist/main.module.js dist/main.mjs",
+    "build:main": "microbundle -i src/index.ts -o index.js --format es,cjs",
+    "build:plugins": "microbundle -i src/plugins.ts -o plugins.js --format es,cjs",
+    "postbuild": "cp index.module.js index.mjs && cp plugins.module.js plugins.mjs",
+    "clean": "shx rm -rf lib && shx rm -f ./index* && rm -f ./plugin*",
+    "clean:all": "npm run clean && shx rm -f ./owja-i18n-*.tgz && shx rm -rf coverage",
     "test": "cross-env NODE_ICU_DATA=node_modules/full-icu jest",
     "lint": "eslint --ext .ts,.js ./src",
     "lint:fix": "eslint --ext .ts,.js ./src --fix",
@@ -75,8 +79,16 @@
     "regex": "^_"
   },
   "files": [
-    "/dist",
-    "/src"
+    "/src",
+    "/lib",
+    "/index.d.ts",
+    "/index.js",
+    "/index.mjs",
+    "/index.module.js",
+    "/plugins.d.ts",
+    "/plugins.js",
+    "/plugins.mjs",
+    "/plugins.module.js"
   ],
   "browserslist": [
     "since 2018-11 and >0%",

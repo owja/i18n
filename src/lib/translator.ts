@@ -2,12 +2,12 @@ import {
     LanguageOptions,
     ParsedTranslations,
     PluginRegistry,
+    Listener,
+    Unsubscribe,
     TranslateOptions,
     Translations,
     TranslatorInterface,
-    Listener,
     TranslatorPlugin,
-    Unsubscribe,
 } from "./interfaces";
 
 export class Translator implements TranslatorInterface {

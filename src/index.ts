@@ -1,2 +1,8 @@
-export * from "./main";
-export * from "./plugins";
+export {Translator} from "./lib/translator";
+export {
+    TranslatorInterface,
+    TranslateFunction,
+    Translations,
+    TranslateOptions,
+    TranslatorPlugin,
+} from "./lib/interfaces";

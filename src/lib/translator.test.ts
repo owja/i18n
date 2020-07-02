@@ -1,4 +1,4 @@
-import {Translator} from "../index";
+import {Translator} from "../";
 import testResource from "../test/test.json";
 
 describe("Translator", () => {

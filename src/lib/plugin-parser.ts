@@ -1,11 +1,11 @@
-interface IValue {
+interface Value {
     match: string;
     arguments: string[];
 }
 
-export default function (translated: string, find: string): IValue[] {
+export function Parser(translated: string, find: string): Value[] {
     const search = new RegExp("(\\[\\[(" + find + ")(\\|(.*?))?\\]\\])", "gm");
-    const values: IValue[] = [];
+    const values: Value[] = [];
 
     let m;
     while ((m = search.exec(translated)) !== null) {

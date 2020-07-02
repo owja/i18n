@@ -1,9 +1,8 @@
 import {TranslatorPlugin} from "./interfaces";
-import Parser from "./plugin-parser";
-import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
+import {Parser} from "./plugin-parser";
 
 export type Formats = {
-    [type: string]: DateTimeFormatOptions;
+    [type: string]: Intl.DateTimeFormatOptions;
 };
 
 export const defaultFormats: Formats = {
@@ -79,7 +78,7 @@ export function createDateTimePlugin(
         ];
 
         for (const set of sets) {
-            let reduce: DateTimeFormatOptions = {};
+            let reduce: Intl.DateTimeFormatOptions = {};
             if (set.type === "date") {
                 reduce = reduceDateFormat;
             } else if (set.type === "time") {
