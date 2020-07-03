@@ -1,6 +1,6 @@
 {
   "name": "@owja/i18n",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "lightweight internationalization library for javascript",
   "main": "index.js",
   "module": "index.module.js",
@@ -13,9 +13,9 @@
       "import": "./index.mjs"
     },
     "./plugins": {
-      "browser": "./index.module.js",
-      "require": "./index.js",
-      "import": "./index.mjs"
+      "browser": "./plugins.module.js",
+      "require": "./plugins.js",
+      "import": "./plugins.mjs"
     },
     "./package.json": "./package.json",
     "./": "./"
