@@ -1,4 +1,4 @@
-import {TranslatorPlugin} from "./interfaces";
+import type {TranslatorPlugin} from "./translator";
 import {Parser} from "./plugin-parser";
 
 export type Formats = {

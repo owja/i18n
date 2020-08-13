@@ -1,6 +1,6 @@
 {
   "name": "@owja/i18n",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "description": "lightweight internationalization library for javascript",
   "main": "index.js",
   "module": "index.module.js",
@@ -40,8 +40,8 @@
     "build": "npm run build:main && npm run build:plugins",
     "build:main": "microbundle -i src/index.ts -o index.js --format es,cjs",
     "build:plugins": "microbundle -i src/plugins.ts -o plugins.js --format es,cjs",
-    "postbuild": "cp index.module.js index.mjs && cp plugins.module.js plugins.mjs",
-    "clean": "shx rm -rf lib && shx rm -f ./index* && rm -f ./plugin*",
+    "postbuild": "shx cp index.module.js index.mjs && shx cp plugins.module.js plugins.mjs",
+    "clean": "shx rm -rf lib && shx rm -f ./index* && shx rm -f ./plugin*",
     "clean:all": "npm run clean && shx rm -f ./owja-i18n-*.tgz && shx rm -rf coverage",
     "test": "cross-env NODE_ICU_DATA=node_modules/full-icu jest",
     "lint": "eslint --ext .ts,.js ./src",
@@ -65,15 +65,15 @@
     "@typescript-eslint/parser": "^2.34.0",
     "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
-    "eslint-plugin-jest": "^23.17.1",
+    "eslint-plugin-jest": "^23.20.0",
     "full-icu": "^1.3.1",
     "jest": "^25.5.4",
-    "microbundle": "^0.12.2",
+    "microbundle": "^0.12.3",
     "prettier": "^2.0.5",
     "shx": "^0.3.2",
     "ts-jest": "^25.5.1",
     "ts-node": "^8.10.2",
-    "typescript": "^3.9.6"
+    "typescript": "^3.9.7"
   },
   "mangle": {
     "regex": "^_"
