@@ -1,6 +1,7 @@
 import {Translator} from "../";
 import testResource from "../test/test.json";
 import {testFullLocales, testShortLocales} from "../test/locales";
+import ISO6391 from "iso-639-1";
 
 describe("Translator", () => {
     let instance: Translator;
@@ -41,7 +42,9 @@ describe("Translator", () => {
     });
 
     test('can set "all" short locales', () => {
+        const ignoring = ["prs", "qut", "quz"];
         for (const locale of testShortLocales) {
+            if (ignoring.includes(locale)) continue;
             instance.locale(locale);
             expect(instance.short()).toBe(locale);
         }
@@ -51,6 +54,15 @@ describe("Translator", () => {
         for (const locale of testFullLocales) {
             instance.locale(locale);
             expect(instance.long()).toBe(locale);
+        }
+    });
+
+    test('can set "all" codes delivered by the ISO-639-1 package', () => {
+        const ignoring = ["bh", "ie", "oj", "pi", "tw"];
+        for (const locale of ISO6391.getAllCodes()) {
+            if (ignoring.includes(locale)) continue;
+            instance.locale(locale);
+            expect(instance.short()).toBe(locale);
         }
     });
 
