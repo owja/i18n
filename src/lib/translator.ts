@@ -133,8 +133,8 @@ export class Translator implements TranslatorInterface {
     /**
      * Get the short locale which is just the language like "en"
      */
-    short(withScript?: boolean): string {
-        return `${this._locale.language}${this.script() && withScript ? `-${this.script()}` : ""}`;
+    short(): string {
+        return `${this._locale.language}${this.script() ? `-${this.script()}` : ""}`;
     }
 
     /**
@@ -158,7 +158,7 @@ export class Translator implements TranslatorInterface {
      * If the locale was set with script, then this will also return the script like "uz-Cyrl-UZ"
      */
     long(): string {
-        return `${this.short(true)}-${this.region()}`;
+        return `${this.short()}-${this.region()}`;
     }
 
     /**

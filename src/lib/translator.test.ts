@@ -43,7 +43,7 @@ describe("Translator", () => {
     test('can set "all" short locales', () => {
         for (const locale of testShortLocales) {
             instance.locale(locale);
-            expect(instance.short(true)).toBe(locale);
+            expect(instance.short()).toBe(locale);
         }
     });
 
