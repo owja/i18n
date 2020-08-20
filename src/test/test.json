@@ -29,7 +29,7 @@
     "item_other": "{{count}} Dingens",
     "hello": "Hallo {{what}}",
     "hello2": "Hallo {{what}} {{what}}",
-    "ownerCar_one": "{{count}} Auto",
+    "ownerCar": "{{count}} Auto",
     "ownerCar_other": "{{count}} Autos",
     "ownerCar_male": "Sein Auto",
     "ownerCar_female": "Ihr Auto",
