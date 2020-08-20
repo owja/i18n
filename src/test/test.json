@@ -1,14 +1,15 @@
 {
   "en": {
-    "item": "1 item",
-    "item_plural": "{{count}} items",
+    "item": "Item",
+    "item_one": "{{count}} item",
+    "item_other": "{{count}} items",
     "item_0": "Zero items",
     "hello": "Hello {{what}}",
     "hello2": "Hello {{what}} {{what}}",
     "ownerCar_male": "his car",
     "ownerCar_female": "her car",
-    "ownerCar_male_plural": "his cars",
-    "ownerCar_female_plural": "her cars",
+    "ownerCar_male_other": "his {{count}} cars",
+    "ownerCar_female_other": "her {{count}} cars",
     "en-only": "only in english",
     "sub": {
       "something": "something",
@@ -23,12 +24,13 @@
     }
   },
   "de": {
-    "item": "Ein Dings",
-    "item_plural": "{{count}} Dingens",
+    "item": "Ding",
+    "item_one": "{{count}} Dings",
+    "item_other": "{{count}} Dingens",
     "hello": "Hallo {{what}}",
     "hello2": "Hallo {{what}} {{what}}",
-    "ownerCar": "Auto",
-    "ownerCar_plural": "Autos",
+    "ownerCar_one": "{{count}} Auto",
+    "ownerCar_other": "{{count}} Autos",
     "ownerCar_male": "Sein Auto",
     "ownerCar_female": "Ihr Auto",
     "de-only": "only in german",

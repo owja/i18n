@@ -1,3 +1,5 @@
+import {_maximize, _parse, _validateLanguageTag} from "./utils";
+
 export type TranslateFunction = (key: string, options?: Partial<TranslateOptions>) => string;
 
 export interface TranslatorInterface {
@@ -7,6 +9,8 @@ export interface TranslatorInterface {
     locale(locale?: string | Intl.Locale): void;
     short(): string;
     long(): string;
+    region(): string;
+    script(): string | undefined;
     addResource(language: string, translations: Translations): void;
     addPlugin(plugin: TranslatorPlugin, language?: string): void;
     listen(listener: Listener): Unsubscribe;
@@ -46,6 +50,8 @@ export type PluginRegistry = {
     [tag: string]: TranslatorPlugin[];
 };
 
+const GLOBAL = "global";
+
 export class Translator implements TranslatorInterface {
     private readonly _options: LanguageOptions = {
         default: "en-US",
@@ -57,10 +63,12 @@ export class Translator implements TranslatorInterface {
     private _registry: PluginRegistry = {};
 
     private _locale: Intl.Locale;
+    private _pluralRule: Intl.PluralRules;
 
     constructor(options: Partial<LanguageOptions> = {}) {
         this._options = {...this._options, ...options};
-        this._locale = Translator._maximize(this._options.default);
+        this._locale = _maximize(this._options.default);
+        this._pluralRule = new Intl.PluralRules(this.long());
         this.t = this.t.bind(this);
     }
 
@@ -74,8 +82,7 @@ export class Translator implements TranslatorInterface {
         if (options.context) pattern.unshift((key = `${key}_${options.context}`));
 
         if (typeof options.count === "number") {
-            // ToDo enhance this with Intl.plural
-            if (options.count !== 1) pattern.unshift(`${key}_plural`);
+            pattern.unshift(`${key}_${this._pluralRule.select(options.count).toString()}`);
             pattern.unshift(`${key}_${options.count}`);
             options.replace["count"] = options.count.toString();
         }
@@ -92,8 +99,10 @@ export class Translator implements TranslatorInterface {
         if (!translated) return key;
 
         for (const find in options.replace) {
-            const replace = options.replace[find].toString();
-            translated = translated.replace(new RegExp(Translator._escapeRegExp("{{" + find + "}}"), "g"), replace);
+            translated = translated.replace(
+                new RegExp("{{" + find + "}}".replace(/[.*+\-?^${}()|[\]\\]/g, "\\$&"), "g"),
+                options.replace[find].toString(),
+            );
         }
 
         // search for plugins is done by
@@ -102,7 +111,7 @@ export class Translator implements TranslatorInterface {
         //   if still none found at least search in "global" registry
         (this._registry[this.long()] || [])
             .concat(this._registry[this.short()] || [])
-            .concat(this._registry["global"] || [])
+            .concat(this._registry[GLOBAL] || [])
             .forEach((plugin) => {
                 translated = plugin(translated, options, this) || translated;
             });
@@ -111,11 +120,12 @@ export class Translator implements TranslatorInterface {
     }
 
     /**
-     * @deprecated use Translator.locale() instead
+     * @deprecated use Translator.locale() instead - this will be removed in final release
      */
     language(language?: string): string {
         if (language && this._locale.language !== language) {
-            this._locale = Translator._maximize(language);
+            this._locale = _maximize(language);
+            this._pluralRule = new Intl.PluralRules(this.long());
             this._trigger();
         }
         return this.short();
@@ -126,12 +136,14 @@ export class Translator implements TranslatorInterface {
      */
     locale(locale: string | Intl.Locale): void {
         const old = this.long();
-        this._locale = Translator._maximize(locale);
+        this._locale = _maximize(locale);
+        this._pluralRule = new Intl.PluralRules(this.long());
         if (old !== this.long()) this._trigger();
     }
 
     /**
      * Get the short locale which is just the language like "en"
+     * It returns with script if it was set like "uz-Curl" instead of "uz"
      */
     short(): string {
         return `${this._locale.language}${this.script() ? `-${this.script()}` : ""}`;
@@ -165,17 +177,17 @@ export class Translator implements TranslatorInterface {
      * Add translations for a language tag
      */
     addResource(languageTag: string, translations: Translations) {
-        languageTag = this.validateLanguageTag(languageTag);
-        this._resources = {...this._resources, ...this._parse(translations, languageTag)};
+        languageTag = _validateLanguageTag(languageTag);
+        this._resources = {...this._resources, ..._parse(translations, languageTag)};
         this._trigger();
     }
 
     /**
      * Add a plugin for a language tag
      */
-    addPlugin(plugin: TranslatorPlugin, languageTag = "global") {
-        if (languageTag !== "global") {
-            languageTag = this.validateLanguageTag(languageTag);
+    addPlugin(plugin: TranslatorPlugin, languageTag = GLOBAL) {
+        if (languageTag !== GLOBAL) {
+            languageTag = _validateLanguageTag(languageTag);
         }
 
         if (this._registry[languageTag] === undefined) {
@@ -183,16 +195,6 @@ export class Translator implements TranslatorInterface {
         }
         this._registry[languageTag].push(plugin);
         this._trigger();
-    }
-
-    /**
-     * Tests if a string is a valid language tag
-     * returns the formatted tag
-     *
-     * https://en.wikipedia.org/wiki/IETF_language_tag
-     */
-    validateLanguageTag(tag: string): string {
-        return new Intl.Locale(tag).toString();
     }
 
     /**
@@ -211,60 +213,6 @@ export class Translator implements TranslatorInterface {
         if (this._listener.indexOf(listener) !== -1) return unsubscribe;
         this._listener.push(listener);
         return unsubscribe;
-    }
-
-    private static _maximize(locale: string | Intl.Locale): Intl.Locale {
-        let localeObj: Intl.Locale;
-        if (typeof locale === "string") {
-            localeObj = new Intl.Locale(locale);
-        } else {
-            localeObj = locale;
-        }
-
-        const withScript = !!localeObj.script;
-        localeObj = localeObj.maximize();
-
-        // we only need script (only if it was passed), region and language
-        localeObj = new Intl.Locale(locale.toString(), {
-            script: withScript ? localeObj.script : undefined,
-            region: localeObj.region,
-            language: localeObj.language,
-        });
-
-        if (!localeObj.region) {
-            throw `the region can not guessed by the locale "${localeObj.toString()}" please use a full locale.`;
-        }
-
-        if (!localeObj.language) {
-            throw `the language can not guessed by the locale "${localeObj.toString()}" please use a full locale.`;
-        }
-
-        return localeObj;
-    }
-
-    private static _escapeRegExp(string: string) {
-        return string.replace(/[.*+\-?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
-    }
-
-    private _parse(translations: Translations, base: string): ParsedTranslations {
-        let parsed: ParsedTranslations = {};
-
-        for (const prop of Object.keys(translations || {})) {
-            const value = translations[prop];
-            if (typeof value !== "string" && typeof value !== "object") continue;
-
-            const key = `${base}.${prop}`;
-
-            if (typeof value === "string") {
-                if (/[^a-zA-Z0-9_\-]/.test(prop)) throw `only a-Z, 0-9, minus sign and underscore allowed: "${prop}"`;
-                parsed[key] = value;
-            } else {
-                if (/[^a-zA-Z0-9\-]/.test(prop)) throw `only a-Z, minus sign and 0-9 allowed: "${prop}"`;
-                parsed = {...parsed, ...this._parse(value, key)};
-            }
-        }
-
-        return parsed;
     }
 
     private _trigger() {

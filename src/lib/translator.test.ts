@@ -122,23 +122,6 @@ describe("Translator", () => {
         expect((instance as any)._listener).toHaveLength(0);
     });
 
-    test("validateLanguageTag should return expected strings", () => {
-        expect(instance.validateLanguageTag("de")).toBe("de");
-        expect(instance.validateLanguageTag("de-DE")).toBe("de-DE");
-        expect(instance.validateLanguageTag("DE-DE")).toBe("de-DE");
-        expect(instance.validateLanguageTag("DE")).toBe("de");
-    });
-
-    test("validateLanguageTag should throw with bad format", () => {
-        let thrown = false;
-        try {
-            instance.validateLanguageTag("de_DE");
-        } catch {
-            thrown = true;
-        }
-        expect(thrown).toBe(true);
-    });
-
     describe("resources", () => {
         test("with one dimension can be added", () => {
             instance.addResource("de", {
@@ -230,9 +213,9 @@ describe("Translator", () => {
 
         test("can translate", () => {
             instance.locale("de");
-            expect(instance.t("item")).toBe("Ein Dings");
+            expect(instance.t("item")).toBe("Ding");
             instance.locale("en");
-            expect(instance.t("item")).toBe("1 item");
+            expect(instance.t("item")).toBe("Item");
         });
 
         test("can not translate missing values", () => {
@@ -242,12 +225,12 @@ describe("Translator", () => {
 
         test("can translate with count option", () => {
             instance.locale("de");
-            expect(instance.t("item", {count: -1})).toBe("-1 Dingens");
+            expect(instance.t("item", {count: -1})).toBe("-1 Dings");
             expect(instance.t("item", {count: 0})).toBe("0 Dingens");
-            expect(instance.t("item", {count: 1})).toBe("Ein Dings");
+            expect(instance.t("item", {count: 1})).toBe("1 Dings");
             expect(instance.t("item", {count: 10})).toBe("10 Dingens");
             instance.locale("en");
-            expect(instance.t("item", {count: -1})).toBe("-1 items");
+            expect(instance.t("item", {count: -1})).toBe("-1 item");
             expect(instance.t("item", {count: 0})).toBe("Zero items");
             expect(instance.t("item", {count: 1})).toBe("1 item");
             expect(instance.t("item", {count: 2})).toBe("2 items");
@@ -289,14 +272,14 @@ describe("Translator", () => {
             instance.locale("en");
             expect(instance.t("ownerCar", {context: "male", count: 1})).toBe("his car");
             expect(instance.t("ownerCar", {context: "female", count: 1})).toBe("her car");
-            expect(instance.t("ownerCar", {context: "male", count: 2})).toBe("his cars");
-            expect(instance.t("ownerCar", {context: "female", count: 2})).toBe("her cars");
+            expect(instance.t("ownerCar", {context: "male", count: 2})).toBe("his 2 cars");
+            expect(instance.t("ownerCar", {context: "female", count: 2})).toBe("her 2 cars");
         });
 
         test("can translate with context and count option with fallback", () => {
             instance.locale("de");
-            expect(instance.t("ownerCar", {count: 1})).toBe("Auto");
-            expect(instance.t("ownerCar", {count: 1})).toBe("Auto");
+            expect(instance.t("ownerCar", {count: 1})).toBe("1 Auto");
+            expect(instance.t("ownerCar", {count: 2})).toBe("2 Autos");
             expect(instance.t("ownerCar", {context: "male", count: 2})).toBe("Sein Auto");
             expect(instance.t("ownerCar", {context: "female", count: 2})).toBe("Ihr Auto");
         });
@@ -312,7 +295,7 @@ describe("Translator", () => {
 
         test("can translate with to 2 level fallback", () => {
             instance.locale("de-DE");
-            expect(instance.t("item")).toBe("Ein Dings");
+            expect(instance.t("item")).toBe("Ding");
             instance.locale("de-CH");
             expect(instance.t("item")).toBe("Ein anderes Dings");
             expect(instance.t("de-only")).toBe("only in german");
