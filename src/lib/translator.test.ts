@@ -171,12 +171,10 @@ describe("Translator", () => {
         });
 
         test("with underscore can be added on top level", () => {
-            /* eslint-disable-next-line @typescript-eslint/camelcase */
             expect(() => instance.addResource("de", {string_three: "three"})).not.toThrow();
         });
 
         test("only with alpha-numeric keys (and minus sign) can be added if they have children", () => {
-            /* eslint-disable-next-line @typescript-eslint/camelcase */
             const bad = [{string_one: {two: "two"}}, {"string three": {four: "four"}}, {string_five: {six: "six"}}];
 
             bad.forEach((data) => {

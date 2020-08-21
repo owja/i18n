@@ -1,4 +1,4 @@
-import {ParsedTranslations, Translations} from "./translator";
+import {ParsedTranslations, Translations} from "./types";
 
 export function _maximize(locale: string | Intl.Locale): Intl.Locale {
     let localeObj = typeof locale === "string" ? new Intl.Locale(locale) : locale;

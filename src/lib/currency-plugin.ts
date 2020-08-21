@@ -1,4 +1,4 @@
-import type {TranslatorPlugin} from "./translator";
+import type {TranslatorPlugin} from "./types";
 import {Parser} from "./plugin-parser";
 
 export function createCurrencyPlugin(
