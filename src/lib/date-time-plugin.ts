@@ -58,9 +58,7 @@ export function createDateTimePlugin(
     formats?: Formats,
 ): TranslatorPlugin {
     return function (translated: string, options, translator) {
-        if (!locale) {
-            locale = translator.long();
-        }
+        locale = locale ?? translator.long();
 
         const sets = [
             {

@@ -1,4 +1,4 @@
-import {Translator} from "../";
+import {TranslateOptions, Translator, TranslatorInterface} from "../";
 import testResource from "../test/test.json";
 import {testFullLocales, testShortLocales} from "../test/locales";
 import ISO6391 from "iso-639-1";
@@ -307,6 +307,46 @@ describe("Translator", () => {
             instance.locale("en-FR");
             expect(instance.t("sub.something")).toBe("something");
             expect(instance.t("sub.else")).toBe("else");
+        });
+    });
+
+    describe("Plugins", () => {
+        const createPlugin = (result: string = "test") =>
+            jest.fn<string | undefined, [string, Partial<TranslateOptions>, TranslatorInterface]>(() => result);
+
+        beforeEach(() => {
+            instance.addResource("en", {t: "[[test]]"});
+        });
+
+        test("can add and find plugin for long locale", () => {
+            const p = createPlugin();
+            instance.addPlugin(p, instance.long());
+            expect(instance.t("t")).toBe("test");
+        });
+
+        test("can add and find plugin for short locale", () => {
+            const p = createPlugin();
+            instance.addPlugin(p, instance.short());
+            expect(instance.t("t")).toBe("test");
+        });
+
+        test("can add and find plugin for global", () => {
+            const p = createPlugin();
+            instance.addPlugin(p);
+            expect(instance.t("t")).toBe("test");
+        });
+
+        test("plugin resolution order: long > short > global", () => {
+            const long = createPlugin("long");
+            const short = createPlugin("short");
+            const global = createPlugin("global");
+            instance.addPlugin(long, instance.long());
+            instance.addPlugin(short, instance.short());
+            instance.addPlugin(global);
+            expect(instance.t("t")).toBe("global");
+            expect(long).toHaveBeenCalledWith("[[test]]", expect.anything(), expect.anything());
+            expect(short).toHaveBeenCalledWith("long", expect.anything(), expect.anything());
+            expect(global).toHaveBeenCalledWith("short", expect.anything(), expect.anything());
         });
     });
 });
