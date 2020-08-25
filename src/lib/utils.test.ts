@@ -1,4 +1,4 @@
-import {_validateLanguageTag} from "./utils";
+import {_maximize, _validateLanguageTag} from "./utils";
 
 describe("Translator Utilities", () => {
     test("validateLanguageTag should return expected strings", () => {
@@ -9,12 +9,10 @@ describe("Translator Utilities", () => {
     });
 
     test("validateLanguageTag should throw with bad format", () => {
-        let thrown = false;
-        try {
-            _validateLanguageTag("de_DE");
-        } catch {
-            thrown = true;
-        }
-        expect(thrown).toBe(true);
+        expect(() => _validateLanguageTag("de_DE")).toThrow();
+    });
+
+    test("maximize should throw on invalid language/region", () => {
+        expect(() => _maximize("XX")).toThrow('locale "xx" incomplete');
     });
 });
