@@ -1,6 +1,6 @@
 {
   "name": "@owja/i18n",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "description": "lightweight internationalization library for javascript",
   "main": "index.js",
   "module": "index.module.js",
