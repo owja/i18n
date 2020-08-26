@@ -1,4 +1,4 @@
-import type {TranslatorPlugin} from "./translator";
+import type {TranslatorPlugin} from "./types";
 import {Parser} from "./plugin-parser";
 
 export type Formats = {
@@ -52,15 +52,13 @@ const reduceTimeFormat = {
 };
 
 export function createDateTimePlugin(
-    locale?: string,
+    locale?: Intl.Locale | string,
     defaultTimezone?: string,
     defaultFormat?: string,
     formats?: Formats,
 ): TranslatorPlugin {
     return function (translated: string, options, translator) {
-        if (!locale) {
-            locale = translator.language();
-        }
+        locale = locale ?? translator.long();
 
         const sets = [
             {
@@ -101,7 +99,7 @@ export function createDateTimePlugin(
 
                 translated = translated.replace(
                     value.match,
-                    new Intl.DateTimeFormat(locale, {
+                    new Intl.DateTimeFormat(locale.toString(), {
                         ...(formats || defaultFormats)[format],
                         ...reduce,
                         timeZone,

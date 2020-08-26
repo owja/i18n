@@ -9,4 +9,5 @@ module.exports = {
     ],
     coverageDirectory: "./coverage/",
     collectCoverage: true,
+    coverageReporters: ["json", "lcov", "text", "clover", "html"],
 };
