@@ -311,7 +311,7 @@ describe("Translator", () => {
     });
 
     describe("Plugins", () => {
-        const createPlugin = (result: string = "test") =>
+        const createPlugin = (result = "test") =>
             jest.fn<string | undefined, [string, Partial<TranslateOptions>, TranslatorInterface]>(() => result);
 
         beforeEach(() => {
