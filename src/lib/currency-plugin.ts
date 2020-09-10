@@ -4,27 +4,41 @@ import {Parser} from "./plugin-parser";
 export function createCurrencyPlugin(
     forcedLocale?: string,
     defaultCurrency?: string,
-    options?: Intl.NumberFormatOptions,
+    numberFormatOptions?: Intl.NumberFormatOptions,
 ): TranslatorPlugin {
-    options = {
-        ...options,
+    const formatOptions = {
+        ...numberFormatOptions,
         ...{style: "currency"},
     };
-    return function (translated: string, _, translator) {
+
+    return function (translated: string, options, translator) {
         const values = Parser(translated, "currency");
         const locale = forcedLocale || translator.long();
 
         values.forEach((value) => {
-            const num: number = parseFloat(value.arguments[0] || "0");
-            if (!isNaN(num)) {
-                translated = translated.replace(
-                    value.match,
-                    new Intl.NumberFormat(locale.toString(), {
-                        ...options,
-                        ...{currency: value.arguments[1] || defaultCurrency || "USD"},
-                    }).format(num),
-                );
+            const pattern: string | undefined = value.arguments[0];
+            const currency: string = value.arguments[1] || defaultCurrency || "USD";
+
+            let num: number;
+            if (pattern === undefined) {
+                num = 0;
+            } else if (
+                options.replace &&
+                options.replace[pattern] !== undefined &&
+                typeof options.replace[pattern] !== "object"
+            ) {
+                num = parseFloat(options.replace[pattern].toString());
+            } else {
+                num = parseFloat(value.arguments[0]) || 0;
             }
+
+            translated = translated.replace(
+                value.match,
+                new Intl.NumberFormat(locale.toString(), {
+                    ...formatOptions,
+                    ...{currency},
+                }).format(num),
+            );
         });
 
         return translated;
