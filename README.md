@@ -33,7 +33,7 @@ There will be a few plugins on stable release. Planed are:
 
 * **[done]** Datetime Formatter, like `[[date|1558819424|short]]` to `05/25`
 * **[done]** Currency Formatter, like `[[cur|2.323122]]` to `€ 2,32`
-* **[todo]** Number Formatter, like `[[decimal|2.323122|2]]` to `2,32`
+* **[done]** Number Formatter, like `[[number|2.323122|2]]` to `2,32`
 * **[todo]** Html2Char Converter, for some useful codes like `&shy;` to `0x00AD`
 
 The reason why this functionality isn't included in the main bundle is that in
