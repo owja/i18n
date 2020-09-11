@@ -27,7 +27,7 @@ export function createCurrencyPlugin(
                 options.replace[pattern] !== undefined &&
                 typeof options.replace[pattern] !== "object"
             ) {
-                num = parseFloat(options.replace[pattern].toString());
+                num = parseFloat(options.replace[pattern].toString()) || 0;
             } else {
                 num = parseFloat(value.arguments[0]) || 0;
             }
