@@ -33,7 +33,7 @@ There will be a few plugins on stable release. Planed are:
 
 * **[done]** Datetime Formatter, like `[[date|1558819424|short]]` to `05/25`
 * **[done]** Currency Formatter, like `[[cur|2.323122]]` to `€ 2,32`
-* **[todo]** Number Formatter, like `[[decimal|2.323122|2]]` to `2,32`
+* **[done]** Number Formatter, like `[[number|2.323122|2]]` to `2,32`
 * **[todo]** Html2Char Converter, for some useful codes like `&shy;` to `0x00AD`
 
 The reason why this functionality isn't included in the main bundle is that in
@@ -43,7 +43,7 @@ many cases they are not needed, or you need only one or two and not all.
 
 ##### Step 1 - Creating an instance of the Translator 
 
-```ts
+```typescript
 import {Translator} from "@owja/i18n";
 const translator = new Translator({default:"de",fallback:"en"});
 ```
@@ -53,27 +53,27 @@ to make accessing the main functionality as easy as possible.
 ##### Step 2 - Importing Translations
 
 a) Adding with static imports
-```ts
+```typescript
 import de from "lang/de.json";
 import en from "lang/de.json";
 
-translator.add("de", de);
-translator.add("en", en);
+translator.addResource("de", de);
+translator.addResource("en", en);
 ```
 
 b) Adding with dynamic imports
-```ts
-import("lang/de.json").then((m) => translator.add("de", m.default));
-import("lang/en.json").then((m) => translator.add("en", m.default));
+```typescript
+import("lang/de.json").then((m) => translator.addResource("de", m.default));
+import("lang/en.json").then((m) => translator.addResource("en", m.default));
 ```
 
 c) Adding with fetch
-```ts
+```typescript
 fetch("lang/de.json").then(r => r.json())
-    .then((r) => translator.add("de", r));
+    .then((r) => translator.addResource("de", r));
     
 fetch("lang/en.json").then(r => r.json())
-    .then((r) => translator.add("en", r));
+    .then((r) => translator.addResource("en", r));
 ```
 
 ##### Step 3 - Translate something
@@ -99,7 +99,7 @@ fetch("lang/en.json").then(r => r.json())
 }
 ```
 
-```ts
+```typescript
 translate.t("hello"); // output: "Hallo Welt"
 translate.t("car", {count: 2}); // output: "Autos"
 translate.t("car", {count: 1}); // output: "Auto"
@@ -136,7 +136,7 @@ For example this is in german and english:
 ##### Setting the Language and Listening
 
 Setting the language:
-```ts
+```typescript
 translate.locale("de");                          // sets only the language and is guessing the region which will result in DE in this case
 translate.locale("de-DE");                       // sets language and region
 translate.locale(new Intl.Locale("de-DE"));      // sets language and region too
@@ -144,7 +144,7 @@ translate.locale("zh-Hant-HK");                  // sets language, script and re
 translate.locale(new Intl.Locale("zh-Hant-HK")); // sets language, script and region too
 ```
 Getting the language:
-```ts
+```typescript
 translate.short();   // short locale (language) like "en" or like "zh-Hant" if script was set
 translate.long();    // long locale like "en-GB" or like "zh-Hant-HK" if script was set
 translate.script();  // long script like "Hant" if script was set else it returns undefined
@@ -152,7 +152,7 @@ translate.region();  // region of the current locale like "DE" if "de" or "de-DE
 ```
 
 Listening to language change and unsubscribe:
-```ts
+```typescript
 // subscribe
 const unsubscribe = translate.listen(() => alert("language was changed"));
 

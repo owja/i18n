@@ -1,23 +1,23 @@
 import type {TranslatorPlugin} from "./types";
 import {Parser} from "./plugin-parser";
 
-export function createCurrencyPlugin(
+export function createNumberPlugin(
     forcedLocale?: string,
-    defaultCurrency?: string,
     numberFormatOptions?: Intl.NumberFormatOptions,
 ): TranslatorPlugin {
     const formatOptions = {
         ...numberFormatOptions,
-        ...{style: "currency"},
+        ...{style: "decimal"},
     };
 
     return function (translated: string, options, translator) {
-        const values = Parser(translated, "currency");
+        const values = Parser(translated, "number");
         const locale = forcedLocale || translator.long();
 
         values.forEach((value) => {
             const pattern: string | undefined = value.arguments[0];
-            const currency: string = value.arguments[1] || defaultCurrency || "USD";
+            const fractions: number | undefined =
+                value.arguments[1] !== undefined ? parseInt(value.arguments[1], 10) : undefined;
 
             let num: number;
             if (pattern === undefined) {
@@ -36,7 +36,8 @@ export function createCurrencyPlugin(
                 value.match,
                 new Intl.NumberFormat(locale.toString(), {
                     ...formatOptions,
-                    ...{currency},
+                    minimumFractionDigits: fractions || formatOptions.minimumFractionDigits,
+                    maximumFractionDigits: fractions || formatOptions.maximumFractionDigits,
                 }).format(num),
             );
         });
