@@ -320,7 +320,7 @@ describe("Translator", () => {
 
     describe("Plugins", () => {
         const createPlugin = (result = "test") =>
-            jest.fn<string | undefined, [string, Partial<TranslateOptions>, TranslatorInterface]>(() => result);
+            jest.fn<string | undefined, [string, Partial<TranslateOptions>, string, TranslatorInterface]>(() => result);
 
         beforeEach(() => {
             instance.addResource("en", {t: "[[test]]"});
@@ -352,9 +352,24 @@ describe("Translator", () => {
             instance.addPlugin(short, instance.short());
             instance.addPlugin(global);
             expect(instance.t("t")).toBe("global");
-            expect(long).toHaveBeenCalledWith("[[test]]", expect.anything(), expect.anything());
-            expect(short).toHaveBeenCalledWith("long", expect.anything(), expect.anything());
-            expect(global).toHaveBeenCalledWith("short", expect.anything(), expect.anything());
+            expect(long).toHaveBeenCalledWith("[[test]]", expect.anything(), expect.anything(), expect.anything());
+            expect(short).toHaveBeenCalledWith("long", expect.anything(), expect.anything(), expect.anything());
+            expect(global).toHaveBeenCalledWith("short", expect.anything(), expect.anything(), expect.anything());
+        });
+
+        test("plugin is called with used (long)locale or fallback", () => {
+            instance.addResource("de", {de: "[[test]]"});
+            instance.addResource("de-DE", {dede: "[[test]]"});
+            const p = createPlugin();
+            instance.addPlugin(p);
+            instance.locale("de-DE");
+
+            expect(instance.t("dede")).toBe("test");
+            expect(p).toHaveBeenCalledWith("[[test]]", expect.anything(), "de-DE", expect.anything());
+            expect(instance.t("de")).toBe("test");
+            expect(p).toHaveBeenCalledWith("[[test]]", expect.anything(), "de-DE", expect.anything());
+            expect(instance.t("t")).toBe("test");
+            expect(p).toHaveBeenCalledWith("[[test]]", expect.anything(), "en", expect.anything());
         });
     });
 });

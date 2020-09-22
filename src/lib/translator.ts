@@ -50,12 +50,13 @@ export class Translator implements TranslatorInterface {
         //   if none found find by short locale like "de"
         //   if still none found search by the fallback which is by default "en"
         let translated = "";
+        let usedFallback = false;
         const currentLanguagePattern = this._patternFor(key, options, false);
         const foundTranslationInCurrentLanguage = [this.long(), this.short()].some((tag) =>
             currentLanguagePattern.some((pat) => !!(translated = this._resources[`${tag}.${pat}`])),
         );
         if (!foundTranslationInCurrentLanguage) {
-            this._patternFor(key, options, true).some(
+            usedFallback = this._patternFor(key, options, true).some(
                 (pat) => !!(translated = this._resources[`${this._options.fallback}.${pat}`]),
             );
         }
@@ -77,7 +78,9 @@ export class Translator implements TranslatorInterface {
             .concat(this._registry[this.short()] || [])
             .concat(this._registry[GLOBAL] || [])
             .forEach((plugin) => {
-                translated = plugin(translated, options, this) || translated;
+                translated =
+                    plugin(translated, options, usedFallback ? this._options.fallback : this.long(), this) ||
+                    translated;
             });
 
         return translated;

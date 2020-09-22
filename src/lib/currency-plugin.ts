@@ -11,9 +11,9 @@ export function createCurrencyPlugin(
         ...{style: "currency"},
     };
 
-    return function (translated: string, options, translator) {
+    return function (translated: string, options, usedLocale) {
         const values = Parser(translated, "currency");
-        const locale = forcedLocale || translator.long();
+        const locale = forcedLocale || usedLocale;
 
         values.forEach((value) => {
             const pattern: string | undefined = value.arguments[0];

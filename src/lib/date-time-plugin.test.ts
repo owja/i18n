@@ -36,7 +36,7 @@ describe("DateTime Plugin", () => {
             },
         ].forEach((test) => {
             const date = new Date("1998-01-07T18:30:00+02:00");
-            expect(plugin(test.q, {replace: {date}}, new Translator())).toBe(test.e);
+            expect(plugin(test.q, {replace: {date}}, "en-US", new Translator())).toBe(test.e);
         });
     });
 
@@ -70,26 +70,25 @@ describe("DateTime Plugin", () => {
                 e: "xxxx 7. Jan. 1998, 16:30 xxx 7. Jan. 1998, 17:30",
             },
         ].forEach((test) => {
-            expect(plugin(test.q, {}, new Translator())).toBe(test.e);
+            expect(plugin(test.q, {}, "en-US", new Translator())).toBe(test.e);
         });
     });
 
     test("can parse [[date]] without a date", () => {
         plugin = createDateTimePlugin("de-DE", "UTC");
-        expect(plugin("xxxx [[date]] xxx [[date]]", {}, new Translator())).not.toBe("xxxx [[date]] xxx [[date]]");
+        expect(plugin("xxxx [[date]] xxx [[date]]", {}, "en-US", new Translator())).not.toBe(
+            "xxxx [[date]] xxx [[date]]",
+        );
     });
 
     test("uses current locale", () => {
         plugin = createDateTimePlugin(undefined, "UTC");
-        const translator = new Translator();
-        translator.locale("de-DE");
         const date = new Date("1998-01-07T18:30:00+02:00");
-        expect(plugin("xxxx [[date|date|medium]] xxx [[date|date|long]]", {replace: {date}}, translator)).toBe(
-            "xxxx 7. Jan. 1998 xxx 7. Januar 1998",
-        );
-        translator.locale("en-US");
-        expect(plugin("xxxx [[date|date|medium]] xxx [[date|date|long]]", {replace: {date}}, translator)).toBe(
-            "xxxx Jan 7, 1998 xxx January 7, 1998",
-        );
+        expect(
+            plugin("xxxx [[date|date|medium]] xxx [[date|date|long]]", {replace: {date}}, "de-DE", new Translator()),
+        ).toBe("xxxx 7. Jan. 1998 xxx 7. Januar 1998");
+        expect(
+            plugin("xxxx [[date|date|medium]] xxx [[date|date|long]]", {replace: {date}}, "en-US", new Translator()),
+        ).toBe("xxxx Jan 7, 1998 xxx January 7, 1998");
     });
 });

@@ -41,6 +41,7 @@ export type Unsubscribe = () => void;
 export type TranslatorPlugin = (
     translated: string,
     options: Partial<TranslateOptions>,
+    usedLocale: string,
     translator: TranslatorInterface,
 ) => string | undefined;
 
