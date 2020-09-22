@@ -24,12 +24,10 @@ export class Translator implements TranslatorInterface {
     private _registry: PluginRegistry = {};
 
     private _locale: Intl.Locale;
-    private _pluralRule: Intl.PluralRules;
 
     constructor(options: Partial<LanguageOptions> = {}) {
         this._options = {...this._options, ...options};
         this._locale = _maximize(this._options.default);
-        this._pluralRule = new Intl.PluralRules(this.long());
         this.t = this.t.bind(this);
     }
 
@@ -43,8 +41,6 @@ export class Translator implements TranslatorInterface {
         if (options.context) pattern.unshift((key = `${key}_${options.context}`));
 
         if (typeof options.count === "number") {
-            pattern.unshift(`${key}_${this._pluralRule.select(options.count).toString()}`);
-            pattern.unshift(`${key}_${options.count}`);
             options.replace["count"] = options.count.toString();
         }
 
@@ -53,9 +49,14 @@ export class Translator implements TranslatorInterface {
         //   if none found find by short locale like "de"
         //   if still none found search by the fallback which is by default "en"
         let translated = "";
-        [this.long(), this.short(), this._options.fallback].find(
-            (tag) => !!pattern.find((pat) => !!(translated = this._resources[`${tag}.${pat}`])),
-        );
+        [this.long(), this.short(), this._options.fallback].some((tag) => {
+            const localPattern = [...pattern];
+            if (typeof options.count === "number") {
+                localPattern.unshift(`${key}_${new Intl.PluralRules(tag).select(options.count).toString()}`);
+                localPattern.unshift(`${key}_${options.count}`);
+            }
+            return localPattern.some((pat) => !!(translated = this._resources[`${tag}.${pat}`]));
+        });
 
         if (!translated) return key;
 
@@ -86,7 +87,6 @@ export class Translator implements TranslatorInterface {
     language(language?: string): string {
         if (language && this._locale.language !== language) {
             this._locale = _maximize(language);
-            this._pluralRule = new Intl.PluralRules(this.long());
             this._trigger();
         }
         return this.short();
@@ -98,7 +98,6 @@ export class Translator implements TranslatorInterface {
     locale(locale: string | Intl.Locale): void {
         const old = this.long();
         this._locale = _maximize(locale);
-        this._pluralRule = new Intl.PluralRules(this.long());
         if (old !== this.long()) this._trigger();
     }
 
