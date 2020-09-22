@@ -207,6 +207,7 @@ describe("Translator", () => {
             instance.addResource("de", testResource.de);
             instance.addResource("de-CH", testResource["de-CH"]);
             instance.addResource("en", testResource.en);
+            instance.addResource("ar", testResource.ar);
         });
 
         test("can translate", () => {
@@ -233,6 +234,13 @@ describe("Translator", () => {
             expect(instance.t("item", {count: 1})).toBe("1 item");
             expect(instance.t("item", {count: 2})).toBe("2 items");
             expect(instance.t("item", {count: 10})).toBe("10 items");
+        });
+
+        test("can translate with count option in fallback language", () => {
+            instance.locale("ar");
+            expect(instance.t("thing", {count: 2})).toBe("2 things");
+            //fallback en
+            expect(instance.t("item", {count: 2})).toBe("2 items");
         });
 
         test("can translate with replace option", () => {

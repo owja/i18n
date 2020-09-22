@@ -44,5 +44,8 @@
   },
   "de-CH": {
     "item": "Ein anderes Dings"
+  },
+  "ar": {
+    "thing_two": "{{count}} things"
   }
 }
