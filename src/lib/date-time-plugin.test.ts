@@ -78,4 +78,18 @@ describe("DateTime Plugin", () => {
         plugin = createDateTimePlugin("de-DE", "UTC");
         expect(plugin("xxxx [[date]] xxx [[date]]", {}, new Translator())).not.toBe("xxxx [[date]] xxx [[date]]");
     });
+
+    test("uses current locale", () => {
+        plugin = createDateTimePlugin(undefined, "UTC");
+        const translator = new Translator();
+        translator.locale("de-DE");
+        const date = new Date("1998-01-07T18:30:00+02:00");
+        expect(plugin("xxxx [[date|date|medium]] xxx [[date|date|long]]", {replace: {date}}, translator)).toBe(
+            "xxxx 7. Jan. 1998 xxx 7. Januar 1998",
+        );
+        translator.locale("en-US");
+        expect(plugin("xxxx [[date|date|medium]] xxx [[date|date|long]]", {replace: {date}}, translator)).toBe(
+            "xxxx Jan 7, 1998 xxx January 7, 1998",
+        );
+    });
 });
