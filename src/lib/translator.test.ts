@@ -78,6 +78,14 @@ describe("Translator", () => {
         expect(instance.long()).toBe("de-DE");
     });
 
+    test("should not trigger listener on deprecated language change when changing to same language", () => {
+        instance.language("de");
+        const spy = jest.fn();
+        instance.listen(spy);
+        instance.language("de");
+        expect(spy).not.toHaveBeenCalled();
+    });
+
     test("should trigger listener on language change", () => {
         const spy = jest.fn();
         instance.listen(spy);
@@ -370,6 +378,17 @@ describe("Translator", () => {
             expect(p).toHaveBeenCalledWith("[[test]]", expect.anything(), "de-DE", expect.anything());
             expect(instance.t("t")).toBe("test");
             expect(p).toHaveBeenCalledWith("[[test]]", expect.anything(), "en", expect.anything());
+        });
+
+        test("plugin may return undefined for not changing anything", () => {
+            instance.addPlugin(createPlugin().mockImplementation(() => undefined));
+            expect(instance.t("t")).toBe("[[test]]");
+        });
+
+        test("can add multiple plugins for same language", () => {
+            instance.addPlugin(jest.fn((t: string) => t.replace("[[te", "foo")));
+            instance.addPlugin(jest.fn((t: string) => t.replace("st]]", "bar")));
+            expect(instance.t("t")).toBe("foobar");
         });
     });
 });
