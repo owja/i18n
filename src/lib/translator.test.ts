@@ -78,6 +78,14 @@ describe("Translator", () => {
         expect(instance.long()).toBe("de-DE");
     });
 
+    test("should not trigger listener on deprecated language change when changing to same language", () => {
+        instance.language("de");
+        const spy = jest.fn();
+        instance.listen(spy);
+        instance.language("de");
+        expect(spy).not.toHaveBeenCalled();
+    });
+
     test("should trigger listener on language change", () => {
         const spy = jest.fn();
         instance.listen(spy);
@@ -320,7 +328,7 @@ describe("Translator", () => {
 
     describe("Plugins", () => {
         const createPlugin = (result = "test") =>
-            jest.fn<string | undefined, [string, Partial<TranslateOptions>, TranslatorInterface]>(() => result);
+            jest.fn<string | undefined, [string, Partial<TranslateOptions>, string, TranslatorInterface]>(() => result);
 
         beforeEach(() => {
             instance.addResource("en", {t: "[[test]]"});
@@ -352,9 +360,35 @@ describe("Translator", () => {
             instance.addPlugin(short, instance.short());
             instance.addPlugin(global);
             expect(instance.t("t")).toBe("global");
-            expect(long).toHaveBeenCalledWith("[[test]]", expect.anything(), expect.anything());
-            expect(short).toHaveBeenCalledWith("long", expect.anything(), expect.anything());
-            expect(global).toHaveBeenCalledWith("short", expect.anything(), expect.anything());
+            expect(long).toHaveBeenCalledWith("[[test]]", expect.anything(), expect.anything(), expect.anything());
+            expect(short).toHaveBeenCalledWith("long", expect.anything(), expect.anything(), expect.anything());
+            expect(global).toHaveBeenCalledWith("short", expect.anything(), expect.anything(), expect.anything());
+        });
+
+        test("plugin is called with used (long)locale or fallback", () => {
+            instance.addResource("de", {de: "[[test]]"});
+            instance.addResource("de-DE", {dede: "[[test]]"});
+            const p = createPlugin();
+            instance.addPlugin(p);
+            instance.locale("de-DE");
+
+            expect(instance.t("dede")).toBe("test");
+            expect(p).toHaveBeenCalledWith("[[test]]", expect.anything(), "de-DE", expect.anything());
+            expect(instance.t("de")).toBe("test");
+            expect(p).toHaveBeenCalledWith("[[test]]", expect.anything(), "de-DE", expect.anything());
+            expect(instance.t("t")).toBe("test");
+            expect(p).toHaveBeenCalledWith("[[test]]", expect.anything(), "en", expect.anything());
+        });
+
+        test("plugin may return undefined for not changing anything", () => {
+            instance.addPlugin(createPlugin().mockImplementation(() => undefined));
+            expect(instance.t("t")).toBe("[[test]]");
+        });
+
+        test("can add multiple plugins for same language", () => {
+            instance.addPlugin(jest.fn((t: string) => t.replace("[[te", "foo")));
+            instance.addPlugin(jest.fn((t: string) => t.replace("st]]", "bar")));
+            expect(instance.t("t")).toBe("foobar");
         });
     });
 });

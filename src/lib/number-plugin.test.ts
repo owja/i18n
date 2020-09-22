@@ -33,14 +33,14 @@ describe("Currency Plugin", () => {
     test("can parse [[number]] with forced locale", () => {
         plugin = createNumberPlugin("de-DE");
         testCasesOne.forEach((test) => {
-            expect(plugin(test.q, testOptions, new Translator())).toBe(test.e);
+            expect(plugin(test.q, testOptions, "en-US", new Translator())).toBe(test.e);
         });
     });
 
     test("can parse [[number]] with locale from translator", () => {
         plugin = createNumberPlugin();
         testCasesOne.forEach((test) => {
-            expect(plugin(test.q, testOptions, new Translator({default: "de-DE"}))).toBe(test.e);
+            expect(plugin(test.q, testOptions, "de-DE", new Translator())).toBe(test.e);
         });
     });
 
@@ -50,7 +50,7 @@ describe("Currency Plugin", () => {
             minimumFractionDigits: 1,
         });
         testCasesTwo.forEach((test) => {
-            expect(plugin(test.q, testOptions, new Translator())).toBe(test.e);
+            expect(plugin(test.q, testOptions, "en-US", new Translator())).toBe(test.e);
         });
     });
 });

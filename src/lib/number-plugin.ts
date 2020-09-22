@@ -10,9 +10,9 @@ export function createNumberPlugin(
         ...{style: "decimal"},
     };
 
-    return function (translated: string, options, translator) {
+    return function (translated: string, options, usedLocale) {
         const values = Parser(translated, "number");
-        const locale = forcedLocale || translator.long();
+        const locale = forcedLocale || usedLocale;
 
         values.forEach((value) => {
             const pattern: string | undefined = value.arguments[0];

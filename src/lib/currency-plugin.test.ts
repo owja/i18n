@@ -21,21 +21,21 @@ describe("Currency Plugin", () => {
     test("can parse [[currency]] with forced locale", () => {
         plugin = createCurrencyPlugin("de-DE", "EUR");
         testCases.forEach((test) => {
-            expect(plugin(test.q, testOptions, new Translator())).toBe(test.e);
+            expect(plugin(test.q, testOptions, "en-US", new Translator())).toBe(test.e);
         });
     });
 
     test("can parse [[currency]] with locale passed by translator", () => {
         plugin = createCurrencyPlugin(undefined, "EUR");
         testCases.forEach((test) => {
-            expect(plugin(test.q, testOptions, new Translator({default: "de-DE"}))).toBe(test.e);
+            expect(plugin(test.q, testOptions, "de-DE", new Translator())).toBe(test.e);
         });
     });
 
     test("can parse [[currency]] without currency (will use USD)", () => {
         plugin = createCurrencyPlugin();
         testCases.forEach((test) => {
-            expect(plugin(test.q, testOptions, new Translator({default: "de-DE"}))).toBe(test.e.replace(/€/g, "$"));
+            expect(plugin(test.q, testOptions, "de-DE", new Translator())).toBe(test.e.replace(/€/g, "$"));
         });
     });
 });
