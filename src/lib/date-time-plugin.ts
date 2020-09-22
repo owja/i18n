@@ -58,7 +58,7 @@ export function createDateTimePlugin(
     formats?: Formats,
 ): TranslatorPlugin {
     return function (translated: string, options, translator) {
-        locale = locale ?? translator.long();
+        const currentLocale = locale ?? translator.long();
 
         const sets = [
             {
@@ -99,7 +99,7 @@ export function createDateTimePlugin(
 
                 translated = translated.replace(
                     value.match,
-                    new Intl.DateTimeFormat(locale.toString(), {
+                    new Intl.DateTimeFormat(currentLocale.toString(), {
                         ...(formats || defaultFormats)[format],
                         ...reduce,
                         timeZone,
