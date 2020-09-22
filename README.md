@@ -10,7 +10,7 @@ work in progress, unstable, can contain bugs and the API can change until first 
 
 ### Features
 
-* lightweight bundle size **less than 1 kb** (brotli compressed, without plugins)
+* lightweight bundle size **~1 kb** (brotli compressed, without plugins)
 * no global state
 * it is made with dependency injection in mind
 * Build-in support for plurals, interpolation and context
