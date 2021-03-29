@@ -14,7 +14,7 @@ export function _maximize(locale: string | Intl.Locale): Intl.Locale {
     });
 
     if (!localeObj.region || !localeObj.language) {
-        throw `locale "${localeObj.toString()}" incomplete`;
+        console.log(`[@owja/i18n] locale "${localeObj.toString()}" incomplete`);
     }
 
     return localeObj;
