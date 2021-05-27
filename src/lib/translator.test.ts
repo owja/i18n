@@ -16,6 +16,17 @@ describe("Translator", () => {
         expect(instance.long()).toBe("en-US");
     });
 
+    test("can handle a bad locale", () => {
+        instance = new Translator({
+            fallback: "xx",
+            default: "xxx",
+        });
+
+        expect(instance.short()).toBe("xxx");
+        expect(instance.long()).toBe("xxx");
+        expect(instance.region()).toBeUndefined();
+    });
+
     test("can set options", () => {
         instance = new Translator({
             fallback: "es",

@@ -7,7 +7,7 @@ export interface TranslatorInterface {
     locale(locale?: string | Intl.Locale): void;
     short(): string;
     long(): string;
-    region(): string;
+    region(): string | undefined;
     script(): string | undefined;
     addResource(language: string, translations: Translations): void;
     addPlugin(plugin: TranslatorPlugin, language?: string): void;

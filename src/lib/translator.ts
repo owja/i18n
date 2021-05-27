@@ -121,7 +121,7 @@ export class Translator implements TranslatorInterface {
     /**
      * Get the region of the locale like "US" from "en-US"
      */
-    region(): string {
+    region(): string | undefined {
         // it is verified when the locale is set
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         return this._locale.region!;
@@ -137,9 +137,12 @@ export class Translator implements TranslatorInterface {
     /**
      * Get the long locale which is the language and the region like "en-US"
      * If the locale was set with script, then this will also return the script like "uz-Cyrl-UZ"
+     *
+     * On some systems it may be that region is unset (Debian 10.9)
+     * It also works around unknown/wrong locales like "xx" which can't get maximized
      */
     long(): string {
-        return `${this.short()}-${this.region()}`;
+        return `${this.short()}${this.region() ? `-${this.region()}` : ""}`;
     }
 
     /**
