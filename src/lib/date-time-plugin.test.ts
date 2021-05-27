@@ -14,8 +14,7 @@ describe("DateTime Plugin", () => {
                 e: "xxxx 16:30 xxx 16:30 UTC xxx 16:30",
             },
             {
-                q:
-                    "xxxx [[time|date|medium|America/Inuvik]] xxx [[time|date|long|America/Inuvik]] xxx [[time|date|short|America/Inuvik]]",
+                q: "xxxx [[time|date|medium|America/Inuvik]] xxx [[time|date|long|America/Inuvik]] xxx [[time|date|short|America/Inuvik]]",
                 e: "xxxx 9:30 xxx 09:30 GMT-7 xxx 9:30",
             },
             {
@@ -56,8 +55,7 @@ describe("DateTime Plugin", () => {
                 e: "xxxx 16:30 xxx 16:30 UTC",
             },
             {
-                q:
-                    "xxxx [[time|1998-01-07T18:30:00+02:00|long|Europe/Berlin]] xxx [[time|1998-01-07T18:30:00+02:00|long|America/Inuvik]]",
+                q: "xxxx [[time|1998-01-07T18:30:00+02:00|long|Europe/Berlin]] xxx [[time|1998-01-07T18:30:00+02:00|long|America/Inuvik]]",
                 e: "xxxx 17:30 MEZ xxx 09:30 GMT-7",
             },
             {
@@ -65,8 +63,7 @@ describe("DateTime Plugin", () => {
                 e: "xxxx 7. Januar 1998 xxx 16:30 Koordinierte Weltzeit",
             },
             {
-                q:
-                    "xxxx [[datetime|1998-01-07T18:30:00+02:00|medium]] xxx [[datetime|1998-01-07T18:30:00+02:00|medium|Europe/Berlin]]",
+                q: "xxxx [[datetime|1998-01-07T18:30:00+02:00|medium]] xxx [[datetime|1998-01-07T18:30:00+02:00|medium|Europe/Berlin]]",
                 e: "xxxx 7. Jan. 1998, 16:30 xxx 7. Jan. 1998, 17:30",
             },
         ].forEach((test) => {
